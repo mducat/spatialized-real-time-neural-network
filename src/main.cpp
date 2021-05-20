@@ -5,7 +5,8 @@ int main(int , char **) {
     brain.runFor(1);
     Display dis(brain);
     while (dis._window->isOpen()){
+    //for (uint i = 0; i < 600; i++){
+        brain.runFor(1.0/60);
         dis.draw();
-        brain.runFor(1);
     }
 }   
