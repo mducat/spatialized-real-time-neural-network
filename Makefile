@@ -3,9 +3,9 @@ SRC =		src/*.cpp
 
 NAME =		sim
 
-CXX =		g++ -g
+CXX =		g++-10 -g
 
-CXXFLAGS = -W -Wall -Wextra -std=c++17 -g
+CXXFLAGS = -W -Wall -Wextra -std=c++20 -g
 
 LIBS = -lm -lsfml-graphics -lsfml-window -lsfml-system -pthread
 
@@ -56,7 +56,7 @@ timeO4: fclean clear allO4
 
 
 allO4:
-	g++ -o $(NAME) $(SRC) $(FLAGS) -O4 $(LIBS) -g
+	g++ -o $(NAME) $(SRC) $(FLAGS) -O4 $(LIBS)
 
 runO4: fclean clear allO4
 	./$(NAME)
