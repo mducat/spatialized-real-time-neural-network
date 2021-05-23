@@ -250,7 +250,7 @@ public:
 
             p[0] = (*ev._neuronSrc)[0]*(1-r) + (*ev._neuronDest)[0]*r;
             p[1] = (*ev._neuronSrc)[1]*(1-r) + (*ev._neuronDest)[1]*r;
-            _circle_event.setPosition(sf::Vector2(p[0], p[1]));
+            _circle_event.setPosition(sf::Vector2f(p[0], p[1]));
             _window->draw(_circle_event);
         }
 

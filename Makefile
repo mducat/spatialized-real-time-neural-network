@@ -1,13 +1,13 @@
 SRC =		src/*.cpp
 
 
-NAME =		sim
+NAME =		Brain
 
 CXX =		g++-10 -g
 
-CXXFLAGS = -W -Wall -Wextra -std=c++20 -g
+CXXFLAGS = 	-W -Wall -Wextra -std=c++20 -g
 
-LIBS = -lm -lsfml-graphics -lsfml-window -lsfml-system -pthread
+LIBS = 		-lm -lsfml-graphics -lsfml-window -lsfml-system -pthread
 
 OBJ = $(SRC:.cpp=.o)
 
