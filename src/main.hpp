@@ -80,6 +80,19 @@ namespace srtnn {
     };
 
     template<uint N>
+    class Synapse {
+        Synapse(Neuron<N> &src, Neuron<N> &dst) {
+        }
+
+        ~Synapse() {
+        }
+
+        void compute() {
+            
+        }
+    };
+
+    template<uint N>
     class Brain {
     public:
         Brain() {
@@ -186,6 +199,7 @@ public:
     {
         _window = new sf::RenderWindow(sf::VideoMode(1024, 1024), "Spatialized Real Time Neural Network");
         _window->setFramerateLimit(60);
+        _window->setPosition(sf::Vector2i(5, 5));
         
         _circle_neuron.setFillColor(sf::Color::White);
         _circle_neuron.setRadius(3);
