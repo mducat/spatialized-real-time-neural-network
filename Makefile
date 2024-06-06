@@ -3,7 +3,7 @@ SRC =		src/*.cpp
 
 NAME =		Brain
 
-CXX =		g++-10 -g
+CXX =		g++ -g
 
 CXXFLAGS = 	-W -Wall -Wextra -std=c++20 -g
 

@@ -1,12 +1,20 @@
 
 #pragma once
 
+#include <vector>
+#include <memory>
+
 #include "object.hpp"
 
-#include <vector>
+class Group : public Object {
+public:
 
-class Group : Object {
+    LayerType getDestinationLayer() override;
+    void update() override;
 
 private:
-    std::vector<Object> objects;
+    std::vector<std::shared_ptr<Object>> objects;
+
+    std::vector<std::shared_ptr<Object>> inputObjects;
+    std::vector<std::shared_ptr<Object>> outputObjects;
 };

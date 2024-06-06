@@ -12,6 +12,7 @@ qt_standard_project_setup()
 include_directories(
     src/display
     src/engine
+    src/engine/layers/network
 )
 
 qt_add_executable(matrix
@@ -21,6 +22,7 @@ qt_add_executable(matrix
     src/engine/layer.cpp
     src/engine/object.cpp
     src/engine/group.cpp
+    src/engine/layers/network/integrate_fire.cpp
 )
 
 target_link_libraries(matrix PRIVATE
