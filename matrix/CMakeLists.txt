@@ -10,19 +10,29 @@ find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 qt_standard_project_setup()
 
 include_directories(
-    src/display
-    src/engine
-    src/engine/layers/network
+        src/display
+        src/widgets
+        src/widgets/live_analyzer
+        src/auto_init
+        src/engine
+        src/engine/layers
+        src/engine/layers/network
+        src/engine/layers/any
 )
 
 qt_add_executable(matrix
-    src/main.cpp
-    src/display/window.cpp
-    src/engine/project.cpp
-    src/engine/layer.cpp
-    src/engine/object.cpp
-    src/engine/group.cpp
-    src/engine/layers/network/integrate_fire.cpp
+        src/main.cpp
+        src/display/window.cpp
+        src/display/widgets/live_analyzer/display.cpp
+        src/display/widgets/live_analyzer/group.cpp
+        src/display/widgets/live_analyzer/value.cpp
+        src/auto_init/main.cpp
+        src/engine/project.cpp
+        src/engine/layer.cpp
+        src/engine/group.cpp
+        src/engine/layers/object.cpp
+        src/engine/layers/network/integrate_fire.cpp
+        src/engine/layers/any/input_holder.cpp
 )
 
 target_link_libraries(matrix PRIVATE

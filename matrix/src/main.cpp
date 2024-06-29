@@ -1,4 +1,7 @@
 
+#include "auto_init/main.hpp"
+
+#include <project.hpp>
 #include <QApplication>
 
 #include <stdlib.h>
@@ -20,10 +23,10 @@ QtMessageHandler originalHandler = nullptr;
 void logger(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QString message = qFormatLogMessage(type, context, msg);
-    //static FILE *f = fopen("log.txt", "a");
-    //printf(f, "%s\n", qPrintable(message));
-    //fflush(f);
-    //puts((const char *) message.data());
+    // static FILE *f = fopen("log.txt", "a");
+    // printf(f, "%s\n", qPrintable(message));
+    // fflush(f);
+    // puts((const char *) message.data());
 
     if (originalHandler)
         (*originalHandler)(type, context, msg);
@@ -35,8 +38,12 @@ int main(int ac, char **av)
     originalHandler = qInstallMessageHandler(logger);
     QApplication app(ac, av);
 
+    auto const project = std::make_shared<Project>();
+    AutoInitMain::init(project);
+
     Window win;
+    win.setProject(project);
     win.show();
 
-    return app.exec();
+    return QApplication::exec();
 }

@@ -1,15 +1,23 @@
 
 
 #include <QLabel>
-#include <QGridLayout>
 #include <QVBoxLayout>
 #include <QtWidgets>
 
 #include "window.hpp"
 
+#include <project.hpp>
+
+#include <widgets/live_analyzer/display.hpp>
+
 Window::Window()
+    : _project(std::make_shared<Project>())
 {
     init();
+}
+
+void Window::setProject(const std::shared_ptr<Project> &project) {
+    this->_project = project;
 }
 
 void Window::init()
@@ -21,14 +29,14 @@ void Window::init()
     initActions();
     initMenus();
 
-    QString message = tr("Matrix: init done");
+    QString const message = tr("Matrix: init done");
     statusBar()->showMessage(message);
     qDebug("Matrix: init done");
 }
 
 void Window::initPanels()
 {
-    QWidget *widget = new QWidget;
+    const auto widget = new QWidget;
     setCentralWidget(widget);
 
     /* QLabel *nativeLabel = new QLabel(tr("Test"), this);
@@ -37,7 +45,7 @@ void Window::initPanels()
     QPushButton *test = new QPushButton(tr("Button"), this);
     test->move(100, 100);*/
 
-    QVBoxLayout *layout = new QVBoxLayout;
+    const auto layout = new QVBoxLayout;
     // layout->addWidget(nativeLabel);
 
     widget->setLayout(layout);
@@ -75,7 +83,13 @@ void Window::initMenus()
 
 void Window::newProject()
 {
+    this->_project = std::make_shared<Project>();
+
     qDebug("newProject() called");
+    // QWidget *wdg = new QWidget;
+    auto *wdg = new AnalyzerDisplay;
+    wdg->show();
+    // hide();//this will disappear main window
 }
 
 void Window::openProject()

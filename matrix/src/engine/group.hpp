@@ -6,7 +6,7 @@
 
 #include "object.hpp"
 
-class Group : public Object {
+class Group final : public Object {
 public:
 
     LayerType getDestinationLayer() override;
