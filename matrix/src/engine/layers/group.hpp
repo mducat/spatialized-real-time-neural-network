@@ -10,7 +10,7 @@ class Group final : public Object {
 public:
 
     LayerType getDestinationLayer() override;
-    void update() override;
+    void update(double) override;
 
 private:
     std::vector<std::shared_ptr<Object>> objects;

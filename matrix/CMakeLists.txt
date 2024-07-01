@@ -15,6 +15,7 @@ include_directories(
         src/widgets/live_analyzer
         src/auto_init
         src/engine
+        src/engine/time
         src/engine/layers
         src/engine/layers/network
         src/engine/layers/any
@@ -29,10 +30,12 @@ qt_add_executable(matrix
         src/auto_init/main.cpp
         src/engine/project.cpp
         src/engine/layer.cpp
-        src/engine/group.cpp
+        src/engine/layers/group.cpp
         src/engine/layers/object.cpp
         src/engine/layers/network/integrate_fire.cpp
-        src/engine/layers/any/input_holder.cpp
+        src/engine/layers/network/input_holder.cpp
+        src/engine/layers/network/network_object.cpp
+        src/engine/layers/time/delta.cpp
 )
 
 target_link_libraries(matrix PRIVATE

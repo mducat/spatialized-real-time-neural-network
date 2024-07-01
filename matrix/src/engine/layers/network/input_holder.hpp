@@ -2,16 +2,15 @@
 #ifndef INPUT_HOLDER_H
 #define INPUT_HOLDER_H
 
-#include "object.hpp"
+#include "network_object.hpp"
 
-class InputHolder final : public Object {
+class InputHolder final : public NetworkObject {
 public:
 
     explicit InputHolder(const double v) : state(v) {}
+    ~InputHolder() override;
 
-    LayerType getDestinationLayer() override;
-
-    void update() override;
+    void update(double) override;
     [[nodiscard]] double value() const override;
 
     void setValue(double);

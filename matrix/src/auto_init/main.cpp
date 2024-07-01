@@ -13,6 +13,8 @@ void AutoInitMain::init(const std::shared_ptr<Project> &project) {
     auto const net = project->createLayer(LayerType::NETWORK);
     // const auto cell = project->createLayer(LayerType::CELL);
     auto const lif = net->create<IntegrateFire>();
+    //auto const lif = std::make_shared<IntegrateFire>();
+    //net->addObject(lif);
 
     auto const in1 = net->create<InputHolder>(1.0);
     auto const in2 = net->create<InputHolder>(1.0);
@@ -20,6 +22,9 @@ void AutoInitMain::init(const std::shared_ptr<Project> &project) {
     lif->connect(in1);
     lif->connect(in2);
 
+    project->init();
     project->step();
     qWarning() << "Current value:" << lif->value();
+
+    // Object *test = new InputHolder(5.1);
 }

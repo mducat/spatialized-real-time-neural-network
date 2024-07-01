@@ -20,7 +20,11 @@ public:
     void openProject();
     void saveProject();
 
+    void closeEvent(QCloseEvent *event) override;
+
 private:
+
+    void update();
 
     void init();
     void initPanels();
@@ -28,6 +32,8 @@ private:
     void initActions();
 
     std::shared_ptr<Project> _project;
+
+    QTimer *timer = nullptr;
 
     QAction *newProjectAction{};
     QAction *openProjectAction{};

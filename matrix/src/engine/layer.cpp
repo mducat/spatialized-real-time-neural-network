@@ -2,7 +2,10 @@
 
 #include <layer.hpp>
 #include <object.hpp>
+
 #include <stdexcept>
+
+#include <qdebug.h>
 
 
 void Layer::addObject(const std::shared_ptr<Object> &obj) {
@@ -19,9 +22,10 @@ void Layer::addObject(const std::shared_ptr<Object> &obj) {
     this->objects.push_back(obj);
 }
 
-void Layer::step() {
+void Layer::step(const double delta) {
+    qDebug() << "Stepping in layer " << layerTypeToString(this->layerType) << " with delta " << delta;
     for (const auto& object : objects) {
-        object->update();
+        object->update(delta);
     }
 }
 

@@ -4,11 +4,11 @@
 
 LayerType Group::getDestinationLayer()
 {
-    return LayerType::UNDEF;
+    return LayerType::ANY;
 }
 
-void Group::update()
+void Group::update(const double delta)
 {
     for (auto const &obj : objects)
-        obj->update();
+        obj->update(delta);
 }

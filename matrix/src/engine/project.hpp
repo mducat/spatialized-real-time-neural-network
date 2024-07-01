@@ -2,6 +2,7 @@
 #pragma once
 
 #include <vector>
+#include <time/delta.hpp>
 
 #include "layer.hpp"
 
@@ -10,11 +11,14 @@ public:
 
     Project();
 
-    void step() const;
+    void init();
+    void step();
 
     std::shared_ptr<Layer> createLayer(LayerType type);
 
 private:
     std::vector<std::shared_ptr<Layer>> layers;
+
+    Delta _delta;
 
 };

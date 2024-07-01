@@ -1,7 +1,6 @@
 
 
 #include <QLabel>
-#include <QVBoxLayout>
 #include <QtWidgets>
 
 #include "window.hpp"
@@ -81,14 +80,26 @@ void Window::initMenus()
     formatMenu = menuBar()->addMenu(tr("&Format"));
 }
 
+void Window::update() {
+    this->_project->step();
+    qDebug("step!");
+}
+
 void Window::newProject()
 {
-    this->_project = std::make_shared<Project>();
+    // this->_project = std::make_shared<Project>();
 
     qDebug("newProject() called");
     // QWidget *wdg = new QWidget;
     auto *wdg = new AnalyzerDisplay;
     wdg->show();
+
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&Window::update));
+    timer->start(1000);
+
+    this->_project->init();
+
     // hide();//this will disappear main window
 }
 
@@ -100,4 +111,12 @@ void Window::openProject()
 void Window::saveProject()
 {
     qDebug("saveProject() called");
+}
+
+void Window::closeEvent(QCloseEvent *event) {
+
+    if (timer)
+        timer->stop();
+
+    event->accept();
 }

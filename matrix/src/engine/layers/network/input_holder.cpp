@@ -1,13 +1,9 @@
 
 #include "input_holder.hpp"
 
-#include <layer.hpp>
+InputHolder::~InputHolder() = default;
 
-LayerType InputHolder::getDestinationLayer() {
-    return LayerType::ANY;
-}
-
-void InputHolder::update() {}
+void InputHolder::update(double) {}
 
 double InputHolder::value() const {
     return this->state;

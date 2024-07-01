@@ -40,7 +40,7 @@ public:
     }
 
     void addObject(const std::shared_ptr<Object> &);
-    void step();
+    void step(double);
 
 private:
 
