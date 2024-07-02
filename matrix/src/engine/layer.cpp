@@ -1,6 +1,7 @@
 
 
 #include <layer.hpp>
+#include <network_object.hpp>
 #include <object.hpp>
 
 #include <stdexcept>
@@ -26,6 +27,10 @@ void Layer::step(const double delta) {
     qDebug() << "Stepping in layer " << layerTypeToString(this->layerType) << " with delta " << delta;
     for (const auto& object : objects) {
         object->update(delta);
+        //const std::shared_ptr<Object> &test = object;
+        const std::shared_ptr<NetworkObject> &try_cast = std::dynamic_pointer_cast<NetworkObject>(object);
+
+        qDebug() << "Object " << typeid(object.get()).name() << " has value " << try_cast->value();
     }
 }
 

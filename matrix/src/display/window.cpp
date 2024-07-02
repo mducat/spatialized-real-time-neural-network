@@ -9,6 +9,8 @@
 
 #include <widgets/live_analyzer/display.hpp>
 
+#include "sin.hpp"
+
 Window::Window()
     : _project(std::make_shared<Project>())
 {
@@ -83,6 +85,9 @@ void Window::initMenus()
 void Window::update() {
     this->_project->step();
     qDebug("step!");
+
+    display->record();
+    display->repaint();
 }
 
 void Window::newProject()
@@ -91,12 +96,18 @@ void Window::newProject()
 
     qDebug("newProject() called");
     // QWidget *wdg = new QWidget;
-    auto *wdg = new AnalyzerDisplay;
-    wdg->show();
+    display = new AnalyzerDisplay;
+    display->show();
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Window::update));
     timer->start(1000);
+
+    auto const test = this->_project->createLayer(LayerType::NETWORK);
+    auto const sin = test->create<Sin>();
+
+    // @todo move UI to AutoInit
+    display->addAnalyzer(sin);
 
     this->_project->init();
 

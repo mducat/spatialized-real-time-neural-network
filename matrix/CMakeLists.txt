@@ -35,6 +35,7 @@ qt_add_executable(matrix
         src/engine/layers/network/integrate_fire.cpp
         src/engine/layers/network/input_holder.cpp
         src/engine/layers/network/network_object.cpp
+        src/engine/layers/network/sin.cpp
         src/engine/layers/time/delta.cpp
 )
 

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class AnalyzerDisplay;
 class Project;
 
 class Window final : public QMainWindow
@@ -33,6 +34,7 @@ private:
 
     std::shared_ptr<Project> _project;
 
+    AnalyzerDisplay *display = nullptr;
     QTimer *timer = nullptr;
 
     QAction *newProjectAction{};
