@@ -101,7 +101,7 @@ void Window::newProject()
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Window::update));
-    timer->start(1000);
+    timer->start(100);
 
     auto const test = this->_project->createLayer(LayerType::NETWORK);
     auto const sin = test->create<Sin>();

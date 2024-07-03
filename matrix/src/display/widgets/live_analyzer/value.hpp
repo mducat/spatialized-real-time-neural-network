@@ -32,6 +32,6 @@ private:
     std::size_t maxValueCount = 500;
     std::deque<double> values;
 
-    double minY = -0.5;
-    double maxY = 0.5;
+    double minY = -0.0;
+    double maxY = 0.0;
 };

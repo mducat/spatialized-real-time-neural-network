@@ -12,8 +12,10 @@ void Project::init() {
 
 void Project::step() {
     qDebug() << "Project step: " << layers.size();
+    double const delta = _delta.delta();
+
     for (const auto &layer : layers) {
-        layer->step(_delta.delta());
+        layer->step(delta);
     }
 }
 

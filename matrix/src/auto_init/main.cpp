@@ -20,12 +20,12 @@ void AutoInitMain::init(const std::shared_ptr<Project> &project) {
     auto const in1 = net->create<InputHolder>(1.0);
     auto const in2 = net->create<InputHolder>(1.0);
 
-    auto const sin = net->create<Sin>();
+    // auto const sin = net->create<Sin>();
 
     lif->connect(in1);
     lif->connect(in2);
 
-    lif->connect(sin);
+    // lif->connect(sin);
 
     project->init();
     project->step();

@@ -6,11 +6,15 @@
 #include <QPointF>
 #include <QLineF>
 
+#include <debug.hpp>
+
 #include "value.hpp"
 
 AnalyzerValue::AnalyzerValue(const std::function<double()> &value) : valueGetter(value) {}
 
 void AnalyzerValue::recordValue() {
+    qWarning("recordValue!");
+
     const double val = this->valueGetter();
 
     if (val < minY)
@@ -21,6 +25,8 @@ void AnalyzerValue::recordValue() {
 
     this->values.push_back(val);
 
+    qDebug() << DISP(val) << DISP(minY) << DISP(maxY);
+
     while (this->values.size() > this->maxValueCount)
         this->values.pop_front();
 }
@@ -30,7 +36,7 @@ QSize AnalyzerValue::sizeHint() const {
 }
 
 QSize AnalyzerValue::minimumSizeHint() const {
-    return {100, 100};
+    return {400, 100};
 }
 
 void AnalyzerValue::paintEvent(QPaintEvent *event) {
@@ -68,7 +74,7 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
     auto const xStep = width / static_cast<double>(this->maxValueCount);
     auto const yStep = height / (minY - maxY);
     auto const valuesCount = static_cast<double>(this->values.size());
-    auto const yOffset = - (yStep * minY);
+    auto const yOffset = yStep * minY;
 
     for (std::size_t i = 1; i < this->values.size(); i++) {
         double const prev = this->values.at(i - 1);
@@ -81,6 +87,13 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
 
         double const y1 = yStep * prev + yOffset;
         double const y2 = yStep * next + yOffset;
+
+        qDebug() << DISP(x1)
+                 << DISP(x2)
+                 << DISP(y1)
+                 << DISP(y2)
+                 << DISP(next)
+                 << DISP(prev);
 
         QLineF datapoint(x1, y1, x2, y2);
         painter.drawLine(datapoint);

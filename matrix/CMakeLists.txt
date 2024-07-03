@@ -14,6 +14,7 @@ include_directories(
         src/widgets
         src/widgets/live_analyzer
         src/auto_init
+        src/helpers
         src/engine
         src/engine/time
         src/engine/layers
