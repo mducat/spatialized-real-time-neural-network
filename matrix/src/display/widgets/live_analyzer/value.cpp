@@ -18,6 +18,10 @@ void AnalyzerValue::setDisplayMode(const DisplayMode m) {
     mode = m;
 }
 
+void AnalyzerValue::setMargin(double const m) {
+    margin = m;
+}
+
 void AnalyzerValue::recordValue() {
     const double val = this->valueGetter();
 
@@ -56,9 +60,9 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
     painter.drawRect(rectangle);
 
     auto const xStep = width / static_cast<double>(this->maxValueCount);
-    auto const yStep = height / (minY - maxY);
+    auto const yStep = height / ((maxY - minY) * margin);
     auto const valuesCount = static_cast<double>(this->values.size());
-    auto const yOffset = yStep * minY;
+    auto const yOffset = yStep * std::abs(minY) * margin;
 
     painter.setPen(Qt::white);
 
@@ -71,8 +75,8 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
         double const x1 = width - valuesCount * xStep + step * xStep;
         double const x2 = width - valuesCount * xStep + (step + 1) * xStep;
 
-        double const y1 = yStep * prev + yOffset;
-        double const y2 = yStep * next + yOffset;
+        double const y1 = height - yStep * prev - yOffset;
+        double const y2 = height - yStep * next - yOffset;
 
         QPointF point(x1, y1);
         QLineF datapoint(x1, y1, x2, y2);

@@ -24,6 +24,7 @@ public:
     enum DisplayMode { points, lines };
 
     void setDisplayMode(DisplayMode);
+    void setMargin(double);
     void recordValue();
 
     [[nodiscard]] QSize minimumSizeHint() const override;
@@ -37,6 +38,8 @@ private:
     std::size_t maxValueCount = 500;
     std::deque<double> values;
 
-    double minY = -2.0;
-    double maxY = 2.0;
+    double minY = -1.0;
+    double maxY = 1.0;
+
+    double margin = 1.5;
 };

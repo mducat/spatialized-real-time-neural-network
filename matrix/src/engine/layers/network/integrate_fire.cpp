@@ -16,7 +16,7 @@ void IntegrateFire::update(double _delta) {
     for (auto const &n : inputs)
         externalCurrent += n->value();
 
-    this->state = externalCurrent;
+    this->state -= externalCurrent / 10;
 }
 
 void IntegrateFire::connect(const std::shared_ptr<NetworkObject> &obj) {

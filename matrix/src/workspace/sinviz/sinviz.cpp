@@ -25,5 +25,5 @@ void SinViz::initWindow(Window *win) {
     win->analyze(sin);
     win->analyze(sin2)->setDisplayMode(AnalyzerValue::lines);
 
-    win->runProject(50);
+    win->runProject(30);
 }
