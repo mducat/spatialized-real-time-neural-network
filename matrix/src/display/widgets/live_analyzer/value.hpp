@@ -21,6 +21,9 @@ protected:
 public:
     explicit AnalyzerValue(const std::function<double()> &);
 
+    enum DisplayMode { points, lines };
+
+    void setDisplayMode(DisplayMode);
     void recordValue();
 
     [[nodiscard]] QSize minimumSizeHint() const override;
@@ -29,9 +32,11 @@ public:
 private:
     std::function<double()> valueGetter;
 
+    DisplayMode mode;
+
     std::size_t maxValueCount = 500;
     std::deque<double> values;
 
-    double minY = -0.0;
-    double maxY = 0.0;
+    double minY = -2.0;
+    double maxY = 2.0;
 };

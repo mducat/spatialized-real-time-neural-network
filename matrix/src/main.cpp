@@ -1,10 +1,10 @@
 
-#include "auto_init/main.hpp"
+#include "workspace/main/main.hpp"
 
 #include <project.hpp>
 #include <QApplication>
 
-
+#include "sinviz.hpp"
 #include "window.hpp"
 
 #define LOG_PATTERN  "\033[39;1m[%{time process}" \
@@ -35,12 +35,17 @@ int main(int ac, char **av)
     originalHandler = qInstallMessageHandler(logger);
     QApplication app(ac, av);
 
+    Workspace *current = new SinViz;
+
     auto const project = std::make_shared<Project>();
-    AutoInitMain::init(project);
+    current->initProject(project);
 
     Window win;
     win.setProject(project);
-    win.show();
+    current->initWindow(&win);
+
+    if (!win.isVisible())
+        win.show();
 
     return QApplication::exec();
 }

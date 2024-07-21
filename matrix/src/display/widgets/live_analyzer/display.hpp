@@ -14,7 +14,7 @@ class AnalyzerDisplay final : public QWidget
 public:
     AnalyzerDisplay();
 
-    void addAnalyzer(const std::shared_ptr<NetworkObject> &);
+    AnalyzerValue *addAnalyzer(const std::shared_ptr<NetworkObject> &);
 
     void record();
 

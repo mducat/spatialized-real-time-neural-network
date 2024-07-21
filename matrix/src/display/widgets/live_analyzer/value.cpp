@@ -10,11 +10,15 @@
 
 #include "value.hpp"
 
-AnalyzerValue::AnalyzerValue(const std::function<double()> &value) : valueGetter(value) {}
+AnalyzerValue::AnalyzerValue(const std::function<double()> &value)
+    : valueGetter(value),
+      mode(points) {}
+
+void AnalyzerValue::setDisplayMode(const DisplayMode m) {
+    mode = m;
+}
 
 void AnalyzerValue::recordValue() {
-    qWarning("recordValue!");
-
     const double val = this->valueGetter();
 
     if (val < minY)
@@ -24,8 +28,6 @@ void AnalyzerValue::recordValue() {
         maxY = val;
 
     this->values.push_back(val);
-
-    qDebug() << DISP(val) << DISP(minY) << DISP(maxY);
 
     while (this->values.size() > this->maxValueCount)
         this->values.pop_front();
@@ -45,36 +47,20 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
     const auto height = static_cast<double>(this->height());
     const auto width = static_cast<double>(this->width());
 
-    painter.setPen(palette().light().color());
+    const QRectF rectangle(0.0, 0.0, width - 1.0, height - 1.0);
+    const QPen pen(Qt::white, 0.5);
 
-    qDebug("test");
-
-    QRectF rectangle(0.0, 0.0, width - 1.0, height - 1.0);
-    //painter.fillRect(rectangle, QBrush(QColor(0.0, 0.0, 0.0, 0.0)));
-    QPen pen(Qt::white, 0.5);
     painter.setPen(pen);
-    painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
 
     painter.fillRect(rectangle, QBrush(Qt::black, Qt::SolidPattern));
     painter.drawRect(rectangle);
-
-    //painter.drawRect(rectangle);
-
-    painter.setPen(Qt::red);
-
-    QLineF line(40.0, 40.0, 62.0, 62.0);
-    painter.drawLine(line);
-
-    QPointF point(20.0, 20.0);
-    painter.drawPoint(point);
-
-    QPointF point2(21.0, 22.0);
-    painter.drawPoint(point2);
 
     auto const xStep = width / static_cast<double>(this->maxValueCount);
     auto const yStep = height / (minY - maxY);
     auto const valuesCount = static_cast<double>(this->values.size());
     auto const yOffset = yStep * minY;
+
+    painter.setPen(Qt::white);
 
     for (std::size_t i = 1; i < this->values.size(); i++) {
         double const prev = this->values.at(i - 1);
@@ -88,14 +74,16 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
         double const y1 = yStep * prev + yOffset;
         double const y2 = yStep * next + yOffset;
 
-        qDebug() << DISP(x1)
-                 << DISP(x2)
-                 << DISP(y1)
-                 << DISP(y2)
-                 << DISP(next)
-                 << DISP(prev);
-
+        QPointF point(x1, y1);
         QLineF datapoint(x1, y1, x2, y2);
-        painter.drawLine(datapoint);
+
+        switch (mode) {
+            case points:
+                painter.drawPoint(point);
+            break;
+            case lines:
+                painter.drawLine(datapoint);
+            break;
+        }
     }
 }

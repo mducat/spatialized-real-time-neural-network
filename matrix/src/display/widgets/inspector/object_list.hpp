@@ -1,0 +1,5 @@
+
+#ifndef OBJECT_LIST_HPP
+#define OBJECT_LIST_HPP
+
+#endif //OBJECT_LIST_HPP

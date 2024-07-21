@@ -21,6 +21,10 @@ void Window::setProject(const std::shared_ptr<Project> &project) {
     this->_project = project;
 }
 
+std::shared_ptr<Project> Window::getProject() {
+    return this->_project;
+}
+
 void Window::init()
 {
     setWindowTitle(tr("Matrix"));
@@ -29,6 +33,8 @@ void Window::init()
     initPanels();
     initActions();
     initMenus();
+
+    initTimer();
 
     QString const message = tr("Matrix: init done");
     statusBar()->showMessage(message);
@@ -82,10 +88,23 @@ void Window::initMenus()
     formatMenu = menuBar()->addMenu(tr("&Format"));
 }
 
-void Window::update() {
-    this->_project->step();
-    qDebug("step!");
+void Window::initTimer() {
+    timer = new QTimer(this);
 
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&Window::tick));
+}
+
+AnalyzerValue *Window::analyze(const std::shared_ptr<NetworkObject> &obj) {
+    if (!display) {
+        display = new AnalyzerDisplay;
+        display->show();
+    }
+
+    return display->addAnalyzer(obj);
+}
+
+void Window::tick() const {
+    this->_project->step();
     display->record();
     display->repaint();
 }
@@ -95,21 +114,6 @@ void Window::newProject()
     // this->_project = std::make_shared<Project>();
 
     qDebug("newProject() called");
-    // QWidget *wdg = new QWidget;
-    display = new AnalyzerDisplay;
-    display->show();
-
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, QOverload<>::of(&Window::update));
-    timer->start(100);
-
-    auto const test = this->_project->createLayer(LayerType::NETWORK);
-    auto const sin = test->create<Sin>();
-
-    // @todo move UI to AutoInit
-    display->addAnalyzer(sin);
-
-    this->_project->init();
 
     // hide();//this will disappear main window
 }
@@ -130,4 +134,19 @@ void Window::closeEvent(QCloseEvent *event) {
         timer->stop();
 
     event->accept();
+}
+
+void Window::runProject(int const msec) const {
+    timer->start(msec);
+}
+
+void Window::pauseProject() const {
+    if (timer)
+        timer->stop();
+}
+
+void Window::stopProject() const {
+    this->pauseProject();
+
+    this->_project->init();
 }

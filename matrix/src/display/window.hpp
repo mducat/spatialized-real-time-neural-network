@@ -2,8 +2,10 @@
 #pragma once
 
 #include <QMainWindow>
+#include <widgets/live_analyzer/value.hpp>
 
 class AnalyzerDisplay;
+class NetworkObject;
 class Project;
 
 class Window final : public QMainWindow
@@ -15,6 +17,8 @@ public:
 
     void setProject(const std::shared_ptr<Project> &);
 
+    std::shared_ptr<Project> getProject();
+
     // actions
 
     void newProject();
@@ -23,14 +27,21 @@ public:
 
     void closeEvent(QCloseEvent *event) override;
 
+    void runProject(int msec = 100) const;
+    void stopProject() const;
+    void pauseProject() const;
+
+    AnalyzerValue *analyze(const std::shared_ptr<NetworkObject> &);
+
 private:
 
-    void update();
+    void tick() const;
 
     void init();
     void initPanels();
     void initMenus();
     void initActions();
+    void initTimer();
 
     std::shared_ptr<Project> _project;
 

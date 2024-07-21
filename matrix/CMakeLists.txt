@@ -13,7 +13,10 @@ include_directories(
         src/display
         src/widgets
         src/widgets/live_analyzer
-        src/auto_init
+        src/workspace
+        src/workspace/sinviz
+        src/workspace/main
+        src/workspace/empty
         src/helpers
         src/engine
         src/engine/time
@@ -28,7 +31,6 @@ qt_add_executable(matrix
         src/display/widgets/live_analyzer/display.cpp
         src/display/widgets/live_analyzer/group.cpp
         src/display/widgets/live_analyzer/value.cpp
-        src/auto_init/main.cpp
         src/engine/project.cpp
         src/engine/layer.cpp
         src/engine/layers/group.cpp
@@ -37,7 +39,13 @@ qt_add_executable(matrix
         src/engine/layers/network/input_holder.cpp
         src/engine/layers/network/network_object.cpp
         src/engine/layers/network/sin.cpp
-        src/engine/layers/time/delta.cpp
+        src/engine/time/delta.cpp
+        src/display/widgets/viewer/scene.cpp
+        src/display/widgets/inspector/inspector.cpp
+        src/display/widgets/inspector/object_list.cpp
+        src/workspace/empty/empty.cpp
+        src/workspace/main/main.cpp
+        src/workspace/sinviz/sinviz.cpp
 )
 
 target_link_libraries(matrix PRIVATE

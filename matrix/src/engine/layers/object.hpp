@@ -9,5 +9,4 @@ public:
 
     virtual LayerType getDestinationLayer() = 0;
     virtual void update(double) = 0;
-
 };

@@ -9,10 +9,12 @@ void Project::init() {
     _delta.start();
 }
 
+void Project::scaleTime(const double time) {
+    _timeScale = time;
+}
 
 void Project::step() {
-    qDebug() << "Project step: " << layers.size();
-    double const delta = _delta.delta();
+    double const delta = _delta.delta() * _timeScale;
 
     for (const auto &layer : layers) {
         layer->step(delta);
