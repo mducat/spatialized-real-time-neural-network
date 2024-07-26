@@ -46,6 +46,7 @@ qt_add_executable(matrix
         src/workspace/empty/empty.cpp
         src/workspace/main/main.cpp
         src/workspace/sinviz/sinviz.cpp
+        src/engine/math/voltage_ode.cpp
 )
 
 target_link_libraries(matrix PRIVATE

@@ -3,20 +3,46 @@
 
 #include "integrate_fire.hpp"
 #include "layer.hpp"
+#include "math/voltage_ode.hpp"
+
+IntegrateFire::IntegrateFire() {
+    this->step = std::make_unique<LinearVoltage>(this->voltageRest);
+}
+
+IntegrateFire::~IntegrateFire() = default;
 
 double IntegrateFire::value() const {
     return this->state;
 }
 
-IntegrateFire::~IntegrateFire() = default;
+void IntegrateFire::setMode(Mode) {
+    switch (mode) {
+        case LINEAR:
+            this->step = std::make_unique<LinearVoltage>(this->voltageRest);
+        break;
+        case EXPONENTIAL:
+            this->step = std::make_unique<ExponentialVoltage>(this->voltageRest, this->eC0, this->eC1);
+        break;
+        case QUADRATIC:
+            this->step = std::make_unique<QuadraticVoltage>(this->voltageRest, this->qC0, this->qC1);
+            break;
+    }
+}
 
-void IntegrateFire::update(double _delta) {
+void IntegrateFire::setStep(std::unique_ptr<VoltageODE> &&ode) {
+    this->step = std::move(ode);
+}
+
+void IntegrateFire::update(const double _delta) {
     double externalCurrent = 0;
 
     for (auto const &n : inputs)
         externalCurrent += n->value();
 
-    this->state -= externalCurrent / 10;
+    double deltaVoltage = this->step->compute(this->state);
+
+    deltaVoltage += externalCurrent * this->resistance;
+    this->state += deltaVoltage * _delta * (1 / this->tau);
 }
 
 void IntegrateFire::connect(const std::shared_ptr<NetworkObject> &obj) {

@@ -21,15 +21,20 @@ void Main::initProject(const std::shared_ptr<Project> &project) {
 
     auto const in1 = net->create<InputHolder>(1.0);
     auto const in2 = net->create<InputHolder>(0.5);
+    auto const sin = net->create<Sin>();
 
     // auto const sinviz = net->create<Sin>();
 
     objs.push_back(in1);
     objs.push_back(in2);
+    objs.push_back(sin);
     objs.push_back(lif);
+
+    sin->update(2.5);
 
     lif->connect(in1);
     lif->connect(in2);
+    lif->connect(sin);
 
     // lif->connect(sinviz);
 

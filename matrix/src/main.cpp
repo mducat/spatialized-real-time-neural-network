@@ -35,7 +35,7 @@ int main(int ac, char **av)
     originalHandler = qInstallMessageHandler(logger);
     QApplication app(ac, av);
 
-    Workspace *current = new SinViz;
+    Workspace *current = new Main;
 
     auto const project = std::make_shared<Project>();
     current->initProject(project);
