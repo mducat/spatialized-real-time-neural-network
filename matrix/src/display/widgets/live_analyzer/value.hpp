@@ -3,13 +3,13 @@
 
 
 #include <functional>
-#include <deque>
 
 #include <QPaintEvent>
 #include <QWidget>
 #include <QSize>
 
-#include <network_object.hpp>
+#include "data/data_source.hpp"
+#include "data/dynamic_data.hpp"
 
 class AnalyzerValue final : public QWidget
 {
@@ -19,27 +19,21 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 public:
-    explicit AnalyzerValue(const std::function<double()> &);
+    AnalyzerValue(QWidget *, const std::function<double()> &);
 
     enum DisplayMode { points, lines };
 
     void setDisplayMode(DisplayMode);
     void setMargin(double);
-    void recordValue();
+    void recordValue() const;
 
     [[nodiscard]] QSize minimumSizeHint() const override;
     [[nodiscard]] QSize sizeHint() const override;
 
 private:
-    std::function<double()> valueGetter;
 
+    std::shared_ptr<DynamicDataSource> source;
     DisplayMode mode;
-
-    std::size_t maxValueCount = 500;
-    std::deque<double> values;
-
-    double minY = -1.0;
-    double maxY = 1.0;
 
     double margin = 1.5;
 };

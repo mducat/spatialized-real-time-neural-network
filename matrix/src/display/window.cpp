@@ -9,7 +9,7 @@
 
 #include <widgets/live_analyzer/display.hpp>
 
-#include "sin.hpp"
+#include "widgets/generic/plot.hpp"
 
 Window::Window()
     : _project(std::make_shared<Project>())
@@ -96,7 +96,7 @@ void Window::initTimer() {
 
 AnalyzerValue *Window::analyze(const std::shared_ptr<NetworkObject> &obj) {
     if (!display) {
-        display = new AnalyzerDisplay;
+        display = new AnalyzerDisplay(nullptr);
         display->show();
     }
 
@@ -105,8 +105,14 @@ AnalyzerValue *Window::analyze(const std::shared_ptr<NetworkObject> &obj) {
 
 void Window::tick() const {
     this->_project->step();
+    // @todo find a better place to record data, project callback ? workspace ?
     display->record();
     display->repaint();
+}
+
+void Window::plot(const std::function<double(double)> &func) {
+    auto const p = new Plot(nullptr, func);
+    p->show();
 }
 
 void Window::newProject()

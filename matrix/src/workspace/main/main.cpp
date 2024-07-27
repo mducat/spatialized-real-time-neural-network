@@ -6,6 +6,7 @@
 #include <project.hpp>
 #include <qdebug.h>
 #include <window.hpp>
+#include <math/voltage_ode.hpp>
 #include <widgets/live_analyzer/display.hpp>
 
 #include "input_holder.hpp"
@@ -22,6 +23,8 @@ void Main::initProject(const std::shared_ptr<Project> &project) {
     auto const in1 = net->create<InputHolder>(1.0);
     auto const in2 = net->create<InputHolder>(0.5);
     auto const sin = net->create<Sin>();
+
+    lif->setODE<ExponentialVoltage>(1.0, 1.0, 1.0);
 
     // auto const sinviz = net->create<Sin>();
 
@@ -51,6 +54,11 @@ void Main::initWindow(Window *win) {
     // QWidget *wdg = new QWidget;
 
     win->show();
+
+    VoltageODE *test = new ExponentialVoltage(1, 1, 1);
+    test->setParams({5, 6, 3});
+    std::function const f = [test](double const x) -> double { return test->compute(x); };
+    win->plot(f);
 
     for (auto const &item : objs) {
         win->analyze(item);

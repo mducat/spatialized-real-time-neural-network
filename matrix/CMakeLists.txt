@@ -20,6 +20,8 @@ include_directories(
         src/helpers
         src/engine
         src/engine/time
+        src/engine/data
+        src/engine/math
         src/engine/layers
         src/engine/layers/network
         src/engine/layers/any
@@ -47,6 +49,9 @@ qt_add_executable(matrix
         src/workspace/main/main.cpp
         src/workspace/sinviz/sinviz.cpp
         src/engine/math/voltage_ode.cpp
+        src/display/widgets/generic/plot.cpp
+        src/engine/data/dynamic_data.cpp
+        src/engine/data/static_data.cpp
 )
 
 target_link_libraries(matrix PRIVATE

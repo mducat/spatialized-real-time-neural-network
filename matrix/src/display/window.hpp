@@ -33,6 +33,8 @@ public:
 
     AnalyzerValue *analyze(const std::shared_ptr<NetworkObject> &);
 
+    void plot(const std::function<double(double)> &);
+
 private:
 
     void tick() const;

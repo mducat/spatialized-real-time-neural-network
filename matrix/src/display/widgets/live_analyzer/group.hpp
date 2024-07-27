@@ -8,6 +8,6 @@ class AnalyzerGroup final : public QWidget
     Q_OBJECT
 
 public:
-    AnalyzerGroup();
+    explicit AnalyzerGroup(QWidget *);
 
 };

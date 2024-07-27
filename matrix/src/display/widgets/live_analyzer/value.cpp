@@ -6,12 +6,13 @@
 #include <QPointF>
 #include <QLineF>
 
-#include <debug.hpp>
-
 #include "value.hpp"
 
-AnalyzerValue::AnalyzerValue(const std::function<double()> &value)
-    : valueGetter(value),
+#include "data/dynamic_data.hpp"
+
+AnalyzerValue::AnalyzerValue(QWidget *parent, const std::function<double()> &value)
+    : QWidget(parent),
+      source(std::make_shared<DynamicDataSource>(value)),
       mode(points) {}
 
 void AnalyzerValue::setDisplayMode(const DisplayMode m) {
@@ -22,19 +23,8 @@ void AnalyzerValue::setMargin(double const m) {
     margin = m;
 }
 
-void AnalyzerValue::recordValue() {
-    const double val = this->valueGetter();
-
-    if (val < minY)
-        minY = val;
-
-    if (val > maxY)
-        maxY = val;
-
-    this->values.push_back(val);
-
-    while (this->values.size() > this->maxValueCount)
-        this->values.pop_front();
+void AnalyzerValue::recordValue() const {
+    this->source->recordValue();
 }
 
 QSize AnalyzerValue::sizeHint() const {
@@ -59,16 +49,20 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
     painter.fillRect(rectangle, QBrush(Qt::black, Qt::SolidPattern));
     painter.drawRect(rectangle);
 
-    auto const xStep = width / static_cast<double>(this->maxValueCount);
+    auto const values = this->source->getValues();
+    double const maxY = this->source->getMaxValue();
+    double const minY = this->source->getMinValue();
+
+    auto const xStep = width / static_cast<double>(this->source->getSize());
     auto const yStep = height / ((maxY - minY) * margin);
-    auto const valuesCount = static_cast<double>(this->values.size());
+    auto const valuesCount = static_cast<double>(values.size());
     auto const yOffset = yStep * std::abs(minY) * margin;
 
     painter.setPen(Qt::white);
 
-    for (std::size_t i = 1; i < this->values.size(); i++) {
-        double const prev = this->values.at(i - 1);
-        double const next = this->values.at(i);
+    for (std::size_t i = 1; i < values.size(); i++) {
+        double const prev = values.at(i - 1);
+        double const next = values.at(i);
 
         auto const step = static_cast<double>(i);
 

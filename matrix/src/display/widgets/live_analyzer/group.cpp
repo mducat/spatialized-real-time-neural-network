@@ -3,5 +3,4 @@
 
 #include "group.hpp"
 
-AnalyzerGroup::AnalyzerGroup() = default;
-
+AnalyzerGroup::AnalyzerGroup(QWidget *parent) : QWidget(parent) {}

@@ -1,11 +1,13 @@
 
 #ifndef VOLTAGE_ODE_HPP
 #define VOLTAGE_ODE_HPP
+#include <vector>
 
 class VoltageODE {
 public:
     virtual ~VoltageODE() = default;
 
+    virtual void setParams(std::vector<double>) = 0;
     virtual double compute(double) = 0;
 };
 
@@ -14,6 +16,7 @@ public:
     explicit LinearVoltage(double);
 
     double compute(double) override;
+    void setParams(std::vector<double>) override;
 
 private:
     double c0;
@@ -24,6 +27,7 @@ public:
     QuadraticVoltage(double, double, double);
 
     double compute(double) override;
+    void setParams(std::vector<double>) override;
 
 private:
     double c0;
@@ -36,6 +40,7 @@ public:
     ExponentialVoltage(double, double, double);
 
     double compute(double) override;
+    void setParams(std::vector<double>) override;
 
 private:
     double c0;

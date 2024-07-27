@@ -12,7 +12,7 @@ class AnalyzerDisplay final : public QWidget
     Q_OBJECT
 
 public:
-    AnalyzerDisplay();
+    explicit AnalyzerDisplay(QWidget *);
 
     AnalyzerValue *addAnalyzer(const std::shared_ptr<NetworkObject> &);
 
