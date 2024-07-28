@@ -10,7 +10,7 @@ StaticDataSource::StaticDataSource(const std::function<double(double)> &getter)
 
 void StaticDataSource::generateValues() {
     const double step = (this->maxRange - this->minRange) / static_cast<double>(this->size);
-    double x = 0;
+    double x = this->minRange;
 
     this->values.clear();
 

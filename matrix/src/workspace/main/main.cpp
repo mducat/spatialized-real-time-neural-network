@@ -51,6 +51,8 @@ void Main::initProject(const std::shared_ptr<Project> &project) {
     // Object *test = new InputHolder(5.1);
 }
 
+#define TO_F(func) [func](double const x) -> double { return func->compute(x); };
+
 void Main::initWindow(Window *win) {
     // QWidget *wdg = new QWidget;
 
@@ -58,8 +60,13 @@ void Main::initWindow(Window *win) {
 
     VoltageODE *test = new ExponentialVoltage(1, 1, 1);
     test->setParams({5, 6, 3});
-    std::function const f = [test](double const x) -> double { return test->compute(x); };
+    std::function const f = TO_F(test);
     win->plot(f);
+
+    VoltageODE *test2 = new QuadraticVoltage(1, 1, 1);
+    test2->setParams({5, 6, 3});
+    std::function const f2 = TO_F(test2);
+    win->plot(f2);
 
     for (auto const &item : objs) {
         win->analyze(item);

@@ -24,7 +24,9 @@ void Project::step() {
 std::shared_ptr<Layer> Project::createLayer(LayerType type) {
     auto newLayer = std::make_shared<Layer>(type);
     this->layers.push_back(newLayer);
-    qCritical() << "Adding layer: " << layers.size();
+
+    std::string const current = layerTypeToString(type);
+    qCritical() << "Adding layer:" << layers.size() << "with type:" << current;
 
     return newLayer;
 }
