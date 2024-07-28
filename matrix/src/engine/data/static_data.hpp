@@ -17,9 +17,6 @@ private:
     std::function<double(double)> source;
 
     void generateValues();
-
-    double rangeMaxX = 1.0;
-    double rangeMinX = -1.0;
 };
 
 #endif //STATIC_DATA_HPP

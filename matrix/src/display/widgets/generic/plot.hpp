@@ -22,25 +22,27 @@ public:
     explicit Plot(QWidget *parent, const std::function<double(double)> &);
 
     void saveAs(const std::string &);
+    void setDrawGrid(bool);
 
     [[nodiscard]] QSize minimumSizeHint() const override;
     [[nodiscard]] QSize sizeHint() const override;
 
 private:
 
-    void drawGraph(QPainter *painter);
+    void drawGraph(QPainter *painter) const;
     void drawGrid(QPainter *painter) const;
-    void drawLabels(QPainter *painter);
+    void drawLabels(QPainter *painter) const;
     void drawPoints(QPainter *painter) const;
 
     std::shared_ptr<DataSource> source;
 
-    bool const shouldDrawGrid = true;
+    bool shouldDrawGrid = true;
 
     double const labelsMargin = 60.0;
     double const graphOffset = 2.0;
 
     std::size_t const gridCount = 10.0;
+    int const labelPrecision = 2;
 
     double widgetH;
     double widgetW;

@@ -3,6 +3,7 @@
 
 #include <debug.hpp>
 #include <QPainter>
+#include <sstream>
 
 #include "data/static_data.hpp"
 
@@ -15,6 +16,10 @@ void Plot::saveAs(const std::string &path) {
     pixmap.save(QString::fromStdString(path));
 }
 
+void Plot::setDrawGrid(bool const draw) {
+    this->shouldDrawGrid = draw;
+}
+
 QSize Plot::minimumSizeHint() const {
     return {600, 600};
 }
@@ -23,9 +28,10 @@ QSize Plot::sizeHint() const {
     return {600, 600};
 }
 
-void Plot::drawGraph(QPainter *painter) {
+void Plot::drawGraph(QPainter *painter) const {
     this->drawGrid(painter);
     this->drawPoints(painter);
+    this->drawLabels(painter);
 }
 
 void Plot::drawGrid(QPainter *painter) const {
@@ -62,7 +68,60 @@ void Plot::drawGrid(QPainter *painter) const {
     }
 }
 
-void Plot::drawLabels(QPainter *painter) {
+void Plot::drawLabels(QPainter *painter) const {
+
+    auto const count = static_cast<double>(this->gridCount);
+
+    auto const xStep = graphW / count;
+    auto const yStep = graphH / count;
+
+    double const maxY = this->source->getMaxValue();
+    double const minY = this->source->getMinValue();
+
+    double const maxX = this->source->getMaxRange();
+    double const minX = this->source->getMinRange();
+
+    auto const valXStep = (maxX - minX) / count;
+    auto const valYStep = (maxY - minY) / count;
+
+    QPen const pen(Qt::white, 0.5, Qt::DotLine);
+    painter->setPen(pen);
+
+    qDebug() << DISP(minY) << DISP(maxY);
+
+    for (std::size_t i = 1; i < this->gridCount + 1; i++) {
+        auto const current = static_cast<double>(i);
+        double const x1 = current * xStep + graphOffset - 15.0;
+
+        double const y1 = graphH + 20.0;
+
+        std::stringstream stream;
+        stream.setf(std::ios::fixed);
+        stream.precision(labelPrecision);
+
+        double value = current * valXStep + minX;
+        stream << value;
+
+        QPointF point(x1, y1);
+        painter->drawText(point, stream.str().data());
+    }
+
+    for (std::size_t i = 0; i < this->gridCount; i++) {
+        auto const current = static_cast<double>(i);
+        double const x1 = graphW + 10.0;
+
+        double const y1 = (count - current) * yStep + graphOffset + 2.0;
+
+        std::stringstream stream;
+        stream.setf(std::ios::fixed);
+        stream.precision(labelPrecision);
+
+        double value = current * valYStep + minY;
+        stream << value;
+
+        QPointF point(x1, y1);
+        painter->drawText(point, stream.str().data());
+    }
 }
 
 void Plot::drawPoints(QPainter *painter) const {

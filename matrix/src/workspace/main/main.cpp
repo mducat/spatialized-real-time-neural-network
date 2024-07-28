@@ -24,7 +24,8 @@ void Main::initProject(const std::shared_ptr<Project> &project) {
     auto const in2 = net->create<InputHolder>(0.5);
     auto const sin = net->create<Sin>();
 
-    lif->setODE<ExponentialVoltage>(1.0, 1.0, 1.0);
+    // lif->setODE<ExponentialVoltage>(1.0, 1.0, 1.0);
+    // lif->setMode()
 
     // auto const sinviz = net->create<Sin>();
 
