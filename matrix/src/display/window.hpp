@@ -27,13 +27,16 @@ public:
 
     void closeEvent(QCloseEvent *event) override;
 
-    void runProject(int msec = 100) const;
+    void runProject(int msec = 50) const;
     void stopProject() const;
     void pauseProject() const;
 
     AnalyzerValue *analyze(const std::shared_ptr<NetworkObject> &);
 
     void plot(const std::function<double(double)> &);
+
+    void hideMatrix();
+    bool shouldDisplay() const;
 
 private:
 
@@ -42,8 +45,11 @@ private:
     void init();
     void initPanels();
     void initMenus();
+    void initToolbar();
     void initActions();
     void initTimer();
+
+    bool _hideMain = false;
 
     std::shared_ptr<Project> _project;
 

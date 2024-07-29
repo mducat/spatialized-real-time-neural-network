@@ -3,6 +3,7 @@
 
 void Delta::start() {
     this->_last = std::chrono::steady_clock::now();
+    this->_first = this->_last;
 }
 
 double Delta::delta() {
@@ -10,6 +11,13 @@ double Delta::delta() {
     std::chrono::duration<double> const duration{now - this->_last};
 
     _last = now;
+    return duration.count();
+}
+
+double Delta::uptime() const {
+    auto const now = std::chrono::steady_clock::now();
+    std::chrono::duration<double> const duration{now - this->_first};
+
     return duration.count();
 }
 

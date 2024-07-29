@@ -5,6 +5,7 @@
 
 #include "window.hpp"
 
+#include <debug.hpp>
 #include <project.hpp>
 
 #include <widgets/live_analyzer/display.hpp>
@@ -33,6 +34,7 @@ void Window::init()
     initPanels();
     initActions();
     initMenus();
+    initToolbar();
 
     initTimer();
 
@@ -88,6 +90,20 @@ void Window::initMenus()
     formatMenu = menuBar()->addMenu(tr("&Format"));
 }
 
+void Window::initToolbar() {
+    QToolBar *toolbar = addToolBar("main");
+
+    QIcon const startIcon = QIcon::fromTheme(QIcon::ThemeIcon::MediaPlaybackStart);
+    QIcon const stopIcon = QIcon::fromTheme(QIcon::ThemeIcon::MediaPlaybackPause);
+
+    QAction const *start = toolbar->addAction(startIcon, QString::fromStdString("Run project"));
+    QAction const *stop = toolbar->addAction(stopIcon, QString::fromStdString("Pause project"));
+
+    auto cb = [&] {this->runProject(50);};
+    connect(start, &QAction::triggered, this, cb);
+    connect(stop, &QAction::triggered, this, &Window::pauseProject);
+}
+
 void Window::initTimer() {
     timer = new QTimer(this);
 
@@ -113,6 +129,14 @@ void Window::tick() const {
 void Window::plot(const std::function<double(double)> &func) {
     auto const p = new Plot(nullptr, func);
     p->show();
+}
+
+void Window::hideMatrix() {
+    this->_hideMain = true;
+}
+
+bool Window::shouldDisplay() const {
+    return !this->_hideMain;
 }
 
 void Window::newProject()
@@ -143,6 +167,7 @@ void Window::closeEvent(QCloseEvent *event) {
 }
 
 void Window::runProject(int const msec) const {
+    qWarning() << "Starting project with:" << DISP(msec);
     timer->start(msec);
 }
 

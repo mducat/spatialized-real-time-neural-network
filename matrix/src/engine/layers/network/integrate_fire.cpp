@@ -3,6 +3,7 @@
 
 #include "integrate_fire.hpp"
 #include "layer.hpp"
+#include "debug.hpp"
 #include "math/voltage_ode.hpp"
 
 IntegrateFire::IntegrateFire() {
@@ -35,14 +36,30 @@ void IntegrateFire::setStep(std::unique_ptr<VoltageODE> &&ode) {
 
 void IntegrateFire::update(const double _delta) {
     double externalCurrent = 0;
+    double deltaVoltage = this->step->compute(this->state);
+
+    if (this->repolarization >= 0) {
+        this->repolarization += _delta;
+
+        if (this->repolarization > this->refractoryPeriod)
+            this->repolarization = -1;
+
+        this->state += 10 * deltaVoltage * _delta * (1 / this->tau);
+
+        return;
+    }
 
     for (auto const &n : inputs)
         externalCurrent += n->value();
 
-    double deltaVoltage = this->step->compute(this->state);
-
     deltaVoltage += externalCurrent * this->resistance;
     this->state += deltaVoltage * _delta * (1 / this->tau);
+
+    if (this->state > this->voltageThreshold) {
+        this->state = this->voltageFire;
+
+        this->repolarization = 0.0;
+    }
 }
 
 void IntegrateFire::connect(const std::shared_ptr<NetworkObject> &obj) {

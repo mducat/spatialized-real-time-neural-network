@@ -47,13 +47,15 @@ private:
     double voltageThreshold = -0.55;
     double voltageRest = -0.70;
     double voltageReset = voltageRest;
+    double voltageFire = +0.40;
 
     double tau = 2.0;
     double resistance = 0.5;
 
-    double refractoryPeriod = 1.0 / 5.0;
+    double repolarization = -1;
+    double refractoryPeriod = (1.0 / 5.0) * 10;
 
-    double state = 0;
+    double state = voltageRest;
 
     // default quadratic mode eq params
     double qC0 = 1.0;

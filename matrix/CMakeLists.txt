@@ -15,6 +15,7 @@ include_directories(
         src/widgets/live_analyzer
         src/workspace
         src/workspace/sinviz
+        src/workspace/plot_test
         src/workspace/main
         src/workspace/empty
         src/helpers
@@ -52,6 +53,7 @@ qt_add_executable(matrix
         src/display/widgets/generic/plot.cpp
         src/engine/data/dynamic_data.cpp
         src/engine/data/static_data.cpp
+        src/workspace/plot_test/plot_test.cpp
 )
 
 target_link_libraries(matrix PRIVATE

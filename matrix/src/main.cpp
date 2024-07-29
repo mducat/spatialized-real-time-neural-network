@@ -6,6 +6,7 @@
 
 #include "sinviz.hpp"
 #include "window.hpp"
+#include "plot_test.hpp"
 
 #define LOG_PATTERN  "\033[39;1m[%{time process}" \
                      "%{if-debug}\033[95;1m    %{endif}"\
@@ -44,8 +45,9 @@ int main(int ac, char **av)
     win.setProject(project);
     current->initWindow(&win);
 
-    if (!win.isVisible())
+    if (!win.isVisible() && win.shouldDisplay()) {
         win.show();
+    }
 
     return QApplication::exec();
 }
