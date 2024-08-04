@@ -14,7 +14,7 @@ void Project::scaleTime(const double time) {
 }
 
 void Project::step() {
-    double const delta = _delta.delta() * _timeScale;
+    double const delta = std::min(_delta.delta() * _timeScale, _maxAllowedDelta);
 
     for (const auto &layer : layers) {
         layer->step(delta);

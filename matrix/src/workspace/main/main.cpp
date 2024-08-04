@@ -2,14 +2,14 @@
 
 #include "main.hpp"
 
+#include <input_holder.hpp>
 #include <integrate_fire.hpp>
 #include <project.hpp>
 #include <qdebug.h>
 #include <window.hpp>
 #include <math/voltage_ode.hpp>
-#include <widgets/live_analyzer/display.hpp>
 
-#include "input_holder.hpp"
+#include "random.hpp"
 #include "sin.hpp"
 
 void Main::initProject(const std::shared_ptr<Project> &project) {
@@ -17,14 +17,25 @@ void Main::initProject(const std::shared_ptr<Project> &project) {
     auto const net = project->createLayer(LayerType::NETWORK);
     // const auto cell = project->createLayer(LayerType::CELL);
     auto const lif = net->create<IntegrateFire>();
+    auto const lif2 = net->create<IntegrateFire>();
     //auto const lif = std::make_shared<IntegrateFire>();
     //net->addObject(lif);
 
-    auto const in1 = net->create<InputHolder>(0.02);
-    auto const in2 = net->create<InputHolder>(0.5);
+#if 0
+    auto const in1 = net->create<InputHolder>(std::vector{0.02, 0.0, 0.2, 0.1});
+    auto const in2 = net->create<InputHolder>(std::vector{0.0, 0.1, 0.35});
+    auto const in3 = net->create<InputHolder>(std::vector{0.0, 0.1, 0.35});
+#else
+    auto const in1 = net->create<Random>();
+    auto const in2 = net->create<Random>();
+    auto const in3 = net->create<Random>();
+#endif
+
     auto const sin = net->create<Sin>();
 
-    // lif->setODE<ExponentialVoltage>(1.0, 1.0, 1.0);
+    // lif->setODE<LinearVoltage>(-0.7);
+    lif->setODE<ExponentialVoltage>(-0.7, -0.8, 4.9);
+    // lif->setODE<QuadraticVoltage>(2.0, 1.0, 5.0);
     // lif->setMode()
 
     // auto const sinviz = net->create<Sin>();
@@ -33,6 +44,8 @@ void Main::initProject(const std::shared_ptr<Project> &project) {
     objs.push_back(in2);
     //objs.push_back(sin);
     objs.push_back(lif);
+    objs.push_back(in3);
+    objs.push_back(lif2);
 
     sin->update(2.5);
 
@@ -40,13 +53,16 @@ void Main::initProject(const std::shared_ptr<Project> &project) {
     lif->connect(in2);
     //lif->connect(sin);
 
+    lif2->connect(in2);
+    lif2->connect(in3);
+
     // lif->connect(sinviz);
 
     project->init();
     project->step();
     qWarning() << "Current value:" << lif->value();
 
-    project->scaleTime(0.5);
+    project->scaleTime(8.0);
 
     // Object *test = new InputHolder(5.1);
 }
@@ -60,7 +76,7 @@ void Main::initWindow(Window *win) {
         win->analyze(item)->setDisplayMode(AnalyzerValue::lines);
     }
 
-    win->runProject(50);
+    win->runProject(10);
 
     //win->runProject(100);
 }

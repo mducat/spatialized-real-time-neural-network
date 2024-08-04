@@ -53,7 +53,7 @@ private:
     double resistance = 0.5;
 
     double repolarization = -1;
-    double refractoryPeriod = (1.0 / 5.0) * 10;
+    double refractoryPeriod = (1.0 / 5.0) * 2;
 
     double state = voltageRest;
 

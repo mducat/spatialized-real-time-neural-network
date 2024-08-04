@@ -24,4 +24,6 @@ private:
     Delta _delta;
     double _timeScale = 1.0;
 
+    double _maxAllowedDelta = 0.2;
+
 };

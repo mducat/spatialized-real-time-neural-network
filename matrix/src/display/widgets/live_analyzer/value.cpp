@@ -56,7 +56,7 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
     auto const xStep = width / static_cast<double>(this->source->getSize());
     auto const yStep = height / ((maxY - minY) * margin);
     auto const valuesCount = static_cast<double>(values.size());
-    auto const yOffset = yStep * std::abs(minY) * margin;
+    // auto const yOffset = yStep * std::abs(minY) * margin;
 
     painter.setPen(Qt::white);
 
@@ -69,8 +69,8 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
         double const x1 = width - valuesCount * xStep + step * xStep;
         double const x2 = width - valuesCount * xStep + (step + 1) * xStep;
 
-        double const y1 = height - yStep * prev - yOffset;
-        double const y2 = height - yStep * next - yOffset;
+        double const y1 = height - yStep * (prev - minY);
+        double const y2 = height - yStep * (next - minY);
 
         QPointF point(x1, y1);
         QLineF datapoint(x1, y1, x2, y2);

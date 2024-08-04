@@ -122,8 +122,10 @@ AnalyzerValue *Window::analyze(const std::shared_ptr<NetworkObject> &obj) {
 void Window::tick() const {
     this->_project->step();
     // @todo find a better place to record data, project callback ? workspace ?
-    display->record();
-    display->repaint();
+    if (display) {
+        display->record();
+        display->repaint();
+    }
 }
 
 void Window::plot(const std::function<double(double)> &func) {
