@@ -1,12 +1,94 @@
-/*
-    QPushButton *bouton = new QPushButton("Mon bouton entre en scène !");
-    QGraphicsScene scene;
-    QGraphicsProxyWidget *proxy = new QGraphicsProxyWidget();
+
+#include "scene.hpp"
+
+#include <qgraphicsproxywidget.h>
+#include <qgraphicsscene.h>
+#include <qgraphicsview.h>
+#include <qpushbutton.h>
+
+
+MainScene::MainScene(QWidget *parent) : QWidget(parent) {
+    this->init();
+}
+
+void MainScene::init() {
+    auto const bouton = new QPushButton("Mon bouton entre en scène !");
+    auto const scene = new QGraphicsScene;
+    auto const proxy = new QGraphicsProxyWidget();
 
     proxy->setWidget(bouton);
-    scene.addItem(proxy);
+    scene->addItem(proxy);
 
-    QGraphicsView view(&scene);
+    auto const view = new QGraphicsView(scene, this);
 
-    Tabs in scene => match layers in object list
- */
+    view->scale(2.0, 2.0);
+}
+
+/*
+ * TODO: adapt
+void MainScene::updateObjects() {
+    Vector2D zero = { 0.0, 0.0 };
+    fill(mvmts_.begin(), mvmts_.end(), zero);
+
+    // Repulsion force between vertice pairs
+    for (vertex_id_t v_id = 0; v_id < g_.size(); v_id++) {
+        for (vertex_id_t other_id = v_id + 1; other_id < g_.size(); other_id++) {
+            if (v_id == other_id) {
+                continue;
+            }
+
+            Vector2D delta = positions[v_id] - positions[other_id];
+            double distance = delta.norm();
+            // TODO: handle distance == 0.0
+
+            // > 1000.0: not worth computing
+            if (distance > 1000.0) {
+                continue;
+            }
+
+            double repulsion = k_squared_ / distance;
+
+            mvmts_[v_id] += delta / distance * repulsion;
+            mvmts_[other_id] -= delta / distance * repulsion;
+        }
+
+        // Attraction force between edges
+        for (vertex_id_t adj_id : g_[v_id]) {
+            if (adj_id > v_id) {
+                continue;
+            }
+
+            Vector2D delta = positions[v_id] - positions[adj_id];
+            double distance = delta.norm();
+            if (distance == 0.0) {
+                continue;
+            }
+
+            double attraction = distance * distance / k_;
+
+            mvmts_[v_id] -= delta / distance * attraction;
+            mvmts_[adj_id] += delta / distance * attraction;
+        }
+    }
+
+    // Max movement capped by current temperature
+    for (vertex_id_t v_id = 0; v_id < g_.size(); v_id++) {
+        double mvmt_norm = mvmts_[v_id].norm();
+        // < 1.0: not worth computing
+        if (mvmt_norm < 1.0) {
+            continue;
+        }
+        double capped_mvmt_norm = std::min(mvmt_norm, temp_);
+        Vector2D capped_mvmt = mvmts_[v_id] / mvmt_norm * capped_mvmt_norm;
+
+        positions[v_id] += capped_mvmt;
+    }
+
+    // Cool down fast until we reach 1.5, then stay at low temperature
+    if (temp_ > 1.5) {
+        temp_ *= 0.85;
+    } else {
+        temp_ = 1.5;
+    }
+}
+*/

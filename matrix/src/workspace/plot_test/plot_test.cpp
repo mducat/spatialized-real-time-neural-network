@@ -15,7 +15,7 @@ void PlotTest::initWindow(Window *win) {
     win->show();
 
     VoltageODE *test = new ExponentialVoltage(1, 1, 1);
-    test->setParams({2, 1, 5});
+    test->setParams({-0.7, -0.8, 4.9});
     std::function const f = TO_F(test);
     win->plot(f);
 

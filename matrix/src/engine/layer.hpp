@@ -15,7 +15,7 @@ enum class LayerType {
     CELL     = 2,
 };
 
-static std::string layerTypeToString(LayerType type) {
+static std::string layerTypeToString(const LayerType type) {
     switch (type) {
         case LayerType::CNS: return "CNS";
         case LayerType::NETWORK: return "NETWORK";
@@ -29,8 +29,7 @@ static std::string layerTypeToString(LayerType type) {
 class Layer {
 public:
 
-    explicit Layer(const LayerType layer_type)
-        : layerType(layer_type) {}
+    explicit Layer(LayerType layer_type);
 
     template<typename T, typename ...Args, std::enable_if_t<std::is_base_of_v<Object, T>>* = nullptr>
     std::shared_ptr<T> create(Args&&... args) {
@@ -42,8 +41,14 @@ public:
     void addObject(const std::shared_ptr<Object> &);
     void step(double);
 
+    std::vector<std::shared_ptr<Object>> getObjects();
+
+    [[nodiscard]] int getLayerId() const;
+    [[nodiscard]] std::string name() const;
+
 private:
 
     LayerType layerType;
     std::vector<std::shared_ptr<Object>> objects;
+    int layerId = -1;
 };

@@ -9,6 +9,12 @@
 #include <qdebug.h>
 
 
+Layer::Layer(const LayerType layer_type)
+    : layerType(layer_type) {
+    static int layerIdCounter;
+    this->layerId = layerIdCounter++;
+}
+
 void Layer::addObject(const std::shared_ptr<Object> &obj) {
 
     if (obj->getDestinationLayer() != this->layerType &&
@@ -26,10 +32,18 @@ void Layer::addObject(const std::shared_ptr<Object> &obj) {
 void Layer::step(const double delta) {
     for (const auto& object : objects) {
         object->update(delta);
-        //const std::shared_ptr<Object> &test = object;
-        // const std::shared_ptr<NetworkObject> &try_cast = std::dynamic_pointer_cast<NetworkObject>(object);
-
-        // qDebug() << "Object " << typeid(object.get()).name() << " has value " << try_cast->value();
     }
+}
+
+std::vector<std::shared_ptr<Object>> Layer::getObjects() {
+    return this->objects;
+}
+
+int Layer::getLayerId() const {
+    return this->layerId;
+}
+
+std::string Layer::name() const {
+    return layerTypeToString(this->layerType) + "_" + std::to_string(this->layerId);
 }
 

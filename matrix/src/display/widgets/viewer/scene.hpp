@@ -1,5 +1,15 @@
 
-#ifndef SCENE_HPP
-#define SCENE_HPP
+#pragma once
 
-#endif //SCENE_HPP
+#include <QWidget>
+
+class MainScene final : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit MainScene(QWidget *);
+
+private:
+    void init();
+};

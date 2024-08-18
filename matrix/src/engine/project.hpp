@@ -17,6 +17,7 @@ public:
     void scaleTime(double);
 
     std::shared_ptr<Layer> createLayer(LayerType type);
+    std::vector<std::shared_ptr<Layer>> getLayers();
 
 private:
     std::vector<std::shared_ptr<Layer>> layers;

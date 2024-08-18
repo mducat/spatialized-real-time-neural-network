@@ -31,3 +31,7 @@ std::shared_ptr<Layer> Project::createLayer(LayerType type) {
     return newLayer;
 }
 
+std::vector<std::shared_ptr<Layer>> Project::getLayers() {
+    return this->layers;
+}
+

@@ -56,6 +56,7 @@ qt_add_executable(matrix
         src/workspace/plot_test/plot_test.cpp
         src/engine/layers/network/random.cpp
         src/engine/layers/network/random.hpp
+        src/workspace/ui/ui_test.cpp
 )
 
 target_link_libraries(matrix PRIVATE

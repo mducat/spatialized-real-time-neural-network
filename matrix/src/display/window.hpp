@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <widgets/live_analyzer/value.hpp>
 
+class MainScene;
 class AnalyzerDisplay;
 class NetworkObject;
 class Project;
@@ -14,6 +15,8 @@ class Window final : public QMainWindow
 
 public:
     Window();
+
+    explicit Window(std::shared_ptr<Project> const & shared);
 
     void setProject(const std::shared_ptr<Project> &);
 
@@ -38,6 +41,8 @@ public:
     void hideMatrix();
     bool shouldDisplay() const;
 
+    void lookupProject();
+
 private:
 
     void tick() const;
@@ -50,11 +55,17 @@ private:
     void initTimer();
 
     bool _hideMain = false;
+    bool _dynamicLookup = false;
+
+    std::unordered_map<int, MainScene*> scenes;
 
     std::shared_ptr<Project> _project;
 
+    QTabWidget *layerTabs = nullptr;
+
     AnalyzerDisplay *display = nullptr;
     QTimer *timer = nullptr;
+    QTimer *lookupTimer = nullptr;
 
     QAction *newProjectAction{};
     QAction *openProjectAction{};

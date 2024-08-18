@@ -9,11 +9,18 @@
 #include <project.hpp>
 
 #include <widgets/live_analyzer/display.hpp>
+#include <widgets/viewer/scene.hpp>
 
 #include "widgets/generic/plot.hpp"
 
 Window::Window()
     : _project(std::make_shared<Project>())
+{
+    init();
+}
+
+Window::Window(std::shared_ptr<Project> const &shared)
+    : _project(shared)
 {
     init();
 }
@@ -45,19 +52,16 @@ void Window::init()
 
 void Window::initPanels()
 {
-    const auto widget = new QWidget;
+    const auto widget = new QWidget(this);
     setCentralWidget(widget);
 
-    /* QLabel *nativeLabel = new QLabel(tr("Test"), this);
-    nativeLabel->setAlignment(Qt::AlignHCenter);
-
-    QPushButton *test = new QPushButton(tr("Button"), this);
-    test->move(100, 100);*/
-
     const auto layout = new QVBoxLayout;
-    // layout->addWidget(nativeLabel);
-
     widget->setLayout(layout);
+
+    layerTabs = new QTabWidget(this);
+    layout->addWidget(layerTabs);
+
+    this->lookupProject();
 }
 
 void Window::initActions()
@@ -106,8 +110,13 @@ void Window::initToolbar() {
 
 void Window::initTimer() {
     timer = new QTimer(this);
+    lookupTimer = new QTimer(this);
 
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&Window::tick));
+    connect(lookupTimer, &QTimer::timeout, this, QOverload<>::of(&Window::lookupProject));
+
+    if (this->_dynamicLookup)
+        lookupTimer->start(500);
 }
 
 AnalyzerValue *Window::analyze(const std::shared_ptr<NetworkObject> &obj) {
@@ -125,6 +134,18 @@ void Window::tick() const {
     if (display) {
         display->record();
         display->repaint();
+    }
+}
+
+void Window::lookupProject() {
+    for (auto const &layer : _project->getLayers()) {
+        auto const scene = new MainScene(this);
+
+        if (this->scenes.find(layer->getLayerId()) != this->scenes.end())
+            continue;
+
+        layerTabs->addTab(scene, QString::fromStdString(layer->name()));
+        this->scenes[layer->getLayerId()] = scene;
     }
 }
 
