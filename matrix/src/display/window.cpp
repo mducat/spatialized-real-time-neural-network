@@ -5,202 +5,60 @@
 
 #include "window.hpp"
 
-#include <debug.hpp>
 #include <project.hpp>
+#include <panel/menu.hpp>
+#include <panel/toolbar.hpp>
 
-#include <widgets/live_analyzer/display.hpp>
-#include <widgets/viewer/scene.hpp>
-
-#include "widgets/generic/plot.hpp"
+#include "panel/scene_tabs.hpp"
 
 Window::Window()
-    : _project(std::make_shared<Project>())
-{
-    init();
-}
-
-Window::Window(std::shared_ptr<Project> const &shared)
-    : _project(shared)
 {
     init();
 }
 
 void Window::setProject(const std::shared_ptr<Project> &project) {
     this->_project = project;
+    this->lookupProject();
 }
 
 std::shared_ptr<Project> Window::getProject() {
     return this->_project;
 }
 
-void Window::init()
-{
+void Window::init() {
     setWindowTitle(tr("Matrix"));
     resize(1200, 800);
 
     initPanels();
-    initActions();
-    initMenus();
     initToolbar();
-
-    initTimer();
+    initMenus();
 
     QString const message = tr("Matrix: init done");
     statusBar()->showMessage(message);
     qDebug("Matrix: init done");
 }
 
-void Window::initPanels()
-{
-    const auto widget = new QWidget(this);
-    setCentralWidget(widget);
+void Window::initPanels() {
+    this->_centralWidget = new QWidget(this);
+    setCentralWidget(this->_centralWidget);
 
-    const auto layout = new QVBoxLayout;
-    widget->setLayout(layout);
+    auto *layout = new QVBoxLayout(this->_centralWidget);
+    this->_centralWidget->setLayout(layout);
 
-    layerTabs = new QTabWidget(this);
-    layout->addWidget(layerTabs);
-
-    this->lookupProject();
+    this->_sceneTabs = new SceneTabs(this);
+    this->_centralWidget->layout()->addWidget(this->_sceneTabs);
 }
 
-void Window::initActions()
-{
-    newProjectAction = new QAction(QIcon::fromTheme(QIcon::ThemeIcon::DocumentNew), tr("&New Project"), this);
-    newProjectAction->setShortcuts(QKeySequence::New);
-    newProjectAction->setStatusTip(tr("Create a new project"));
-    connect(newProjectAction, &QAction::triggered, this, &Window::newProject);
-
-    openProjectAction = new QAction(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen), tr("&Open Project"), this);
-    openProjectAction->setShortcuts(QKeySequence::Open);
-    openProjectAction->setStatusTip(tr("Open a project from file"));
-    connect(openProjectAction, &QAction::triggered, this, &Window::openProject);
-
-    saveProjectAction = new QAction(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSave), tr("&Save Project"), this);
-    saveProjectAction->setShortcuts(QKeySequence::Save);
-    saveProjectAction->setStatusTip(tr("Save current project"));
-    connect(saveProjectAction, &QAction::triggered, this, &Window::saveProject);
-}
-
-void Window::initMenus()
-{
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(newProjectAction);
-    fileMenu->addAction(openProjectAction);
-    fileMenu->addAction(saveProjectAction);
-
-    editMenu = menuBar()->addMenu(tr("&Edit"));
-    helpMenu = menuBar()->addMenu(tr("&Help"));
-    formatMenu = menuBar()->addMenu(tr("&Format"));
+void Window::initMenus() {
+    this->_menuBar = new MenuBar(this);
+    this->setMenuBar(this->_menuBar->getWidget());
 }
 
 void Window::initToolbar() {
-    QToolBar *toolbar = addToolBar("main");
-
-    QIcon const startIcon = QIcon::fromTheme(QIcon::ThemeIcon::MediaPlaybackStart);
-    QIcon const stopIcon = QIcon::fromTheme(QIcon::ThemeIcon::MediaPlaybackPause);
-
-    QAction const *start = toolbar->addAction(startIcon, QString::fromStdString("Run project"));
-    QAction const *stop = toolbar->addAction(stopIcon, QString::fromStdString("Pause project"));
-
-    auto cb = [&] {this->runProject(50);};
-    connect(start, &QAction::triggered, this, cb);
-    connect(stop, &QAction::triggered, this, &Window::pauseProject);
+    this->_toolBar = new Toolbar(this);
+    this->addToolBar(this->_toolBar->getWidget());
 }
 
-void Window::initTimer() {
-    timer = new QTimer(this);
-    lookupTimer = new QTimer(this);
-
-    connect(timer, &QTimer::timeout, this, QOverload<>::of(&Window::tick));
-    connect(lookupTimer, &QTimer::timeout, this, QOverload<>::of(&Window::lookupProject));
-
-    if (this->_dynamicLookup)
-        lookupTimer->start(500);
-}
-
-AnalyzerValue *Window::analyze(const std::shared_ptr<NetworkObject> &obj) {
-    if (!display) {
-        display = new AnalyzerDisplay(nullptr);
-        display->show();
-    }
-
-    return display->addAnalyzer(obj);
-}
-
-void Window::tick() const {
-    this->_project->step();
-    // @todo find a better place to record data, project callback ? workspace ?
-    if (display) {
-        display->record();
-        display->repaint();
-    }
-}
-
-void Window::lookupProject() {
-    for (auto const &layer : _project->getLayers()) {
-        auto const scene = new MainScene(this);
-
-        if (this->scenes.find(layer->getLayerId()) != this->scenes.end())
-            continue;
-
-        layerTabs->addTab(scene, QString::fromStdString(layer->name()));
-        this->scenes[layer->getLayerId()] = scene;
-    }
-}
-
-void Window::plot(const std::function<double(double)> &func) {
-    auto const p = new Plot(nullptr, func);
-    p->show();
-}
-
-void Window::hideMatrix() {
-    this->_hideMain = true;
-}
-
-bool Window::shouldDisplay() const {
-    return !this->_hideMain;
-}
-
-void Window::newProject()
-{
-    // this->_project = std::make_shared<Project>();
-
-    qDebug("newProject() called");
-
-    // hide();//this will disappear main window
-}
-
-void Window::openProject()
-{
-    qDebug("openProject() called");
-}
-
-void Window::saveProject()
-{
-    qDebug("saveProject() called");
-}
-
-void Window::closeEvent(QCloseEvent *event) {
-
-    if (timer)
-        timer->stop();
-
-    event->accept();
-}
-
-void Window::runProject(int const msec) const {
-    qWarning() << "Starting project with:" << DISP(msec);
-    timer->start(msec);
-}
-
-void Window::pauseProject() const {
-    if (timer)
-        timer->stop();
-}
-
-void Window::stopProject() const {
-    this->pauseProject();
-
-    this->_project->init();
+void Window::lookupProject() const {
+    this->_sceneTabs->lookupProject();
 }

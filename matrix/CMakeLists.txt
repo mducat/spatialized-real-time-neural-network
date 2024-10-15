@@ -10,9 +10,10 @@ find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 qt_standard_project_setup()
 
 include_directories(
+        src/
         src/display
-        src/widgets
-        src/widgets/live_analyzer
+        src/display/widgets
+        src/display/widgets/live_analyzer
         src/workspace
         src/workspace/sinviz
         src/workspace/plot_test
@@ -28,40 +29,67 @@ include_directories(
         src/engine/layers/any
 )
 
-qt_add_executable(matrix
-        src/main.cpp
+qt_add_library(mlib
+        src/launcher.cpp
+
+        # UI
+
         src/display/window.cpp
         src/display/widgets/live_analyzer/display.cpp
         src/display/widgets/live_analyzer/group.cpp
         src/display/widgets/live_analyzer/value.cpp
+        src/display/widgets/viewer/scene.cpp
+        src/display/widgets/inspector/inspector.cpp
+        src/display/widgets/inspector/object_list.cpp
+        src/display/widgets/generic/plot.cpp
+
+        src/display/panel/menu.cpp
+        src/display/panel/toolbar.cpp
+
+        # ENGINE
+
         src/engine/project.cpp
         src/engine/layer.cpp
         src/engine/layers/group.cpp
         src/engine/layers/object.cpp
+
         src/engine/layers/network/integrate_fire.cpp
         src/engine/layers/network/input_holder.cpp
         src/engine/layers/network/network_object.cpp
         src/engine/layers/network/sin.cpp
+
         src/engine/time/delta.cpp
-        src/display/widgets/viewer/scene.cpp
-        src/display/widgets/inspector/inspector.cpp
-        src/display/widgets/inspector/object_list.cpp
-        src/workspace/empty/empty.cpp
-        src/workspace/main/main.cpp
-        src/workspace/sinviz/sinviz.cpp
         src/engine/math/voltage_ode.cpp
-        src/display/widgets/generic/plot.cpp
         src/engine/data/dynamic_data.cpp
         src/engine/data/static_data.cpp
-        src/workspace/plot_test/plot_test.cpp
         src/engine/layers/network/random.cpp
-        src/engine/layers/network/random.hpp
-        src/workspace/ui/ui_test.cpp
+        src/display/panel/scene_tabs.cpp
+        src/display/panel/scene_tabs.hpp
+
 )
 
-target_link_libraries(matrix PRIVATE
-    Qt6::Core
-    Qt6::Widgets
+target_link_libraries(mlib PRIVATE
+        Qt6::Core
+        Qt6::Widgets
 )
+
+qt_add_executable(matrix     src/workspace/main.cpp)
+qt_add_executable(ui_test    src/workspace/ui_test.cpp)
+qt_add_executable(plot_test  src/workspace/plot_test.cpp)
+qt_add_executable(sinviz     src/workspace/sinviz.cpp)
+
+set (_executables_list "matrix;ui_test;plot_test;sinviz")
+
+foreach (my_entry IN LISTS _executables_list)
+
+    message(STATUS "LINK ${my_entry}")
+
+    target_link_libraries("${my_entry}" PRIVATE
+            Qt6::Core
+            Qt6::Widgets
+            mlib
+    )
+
+endforeach()
 
 target_compile_definitions(matrix PRIVATE -DQT_DEBUG -DQT_MESSAGELOGCONTEXT)

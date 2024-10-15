@@ -1,5 +1,4 @@
 
-#include <algorithm>
 
 #include "integrate_fire.hpp"
 #include "layer.hpp"
@@ -61,14 +60,4 @@ void IntegrateFire::update(const double _delta) {
         this->repolarization = 0.0;
     }
 }
-
-void IntegrateFire::connect(const std::shared_ptr<NetworkObject> &obj) {
-    this->inputs.push_back(obj);
-}
-
-void IntegrateFire::disconnect(const std::shared_ptr<NetworkObject> &obj) {
-    auto const it = std::remove(this->inputs.begin(), this->inputs.end(), obj);
-    this->inputs.erase(it);
-}
-
 

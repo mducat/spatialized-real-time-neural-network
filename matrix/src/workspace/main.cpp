@@ -1,18 +1,25 @@
 
 
-#include "main.hpp"
-
 #include <input_holder.hpp>
 #include <integrate_fire.hpp>
 #include <project.hpp>
+#include <QApplication>
 #include <qdebug.h>
 #include <window.hpp>
-#include <math/voltage_ode.hpp>
+#include <voltage_ode.hpp>
 
 #include "random.hpp"
 #include "sin.hpp"
+#include "launcher.hpp"
 
-void Main::initProject(const std::shared_ptr<Project> &project) {
+int main(int ac, char **av) {
+    launcher::init();
+    QApplication app(ac, av);
+
+    const std::shared_ptr<Project> &project = std::make_shared<Project>();
+    std::vector<std::shared_ptr<NetworkObject>> objs;
+
+
     // const auto cns = project->createLayer(LayerType::CNS);
     auto const net = project->createLayer(LayerType::NETWORK);
     // const auto cell = project->createLayer(LayerType::CELL);
@@ -64,19 +71,15 @@ void Main::initProject(const std::shared_ptr<Project> &project) {
 
     project->scaleTime(8.0);
 
+    auto *win = new Window;
+
     // Object *test = new InputHolder(5.1);
-}
 
-void Main::initWindow(Window *win) {
-    // QWidget *wdg = new QWidget;
-
-    win->hideMatrix();
-
-    for (auto const &item : objs) {
+    /*for (auto const &item : objs) {
         win->analyze(item)->setDisplayMode(AnalyzerValue::lines);
-    }
+    }*/
 
-    win->runProject(10);
+    // win->runProject(10);
 
-    //win->runProject(100);
+    return launcher::exec(win);
 }

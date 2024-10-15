@@ -35,12 +35,8 @@ public:
 
     [[nodiscard]] double value() const override;
 
-    void connect(const std::shared_ptr<NetworkObject> &);
-    void disconnect(const std::shared_ptr<NetworkObject> &);
-
 private:
 
-    std::vector<std::shared_ptr<NetworkObject>> inputs;
     Mode mode = LINEAR;
     std::unique_ptr<VoltageODE> step;
 

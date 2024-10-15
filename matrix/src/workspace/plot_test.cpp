@@ -1,17 +1,18 @@
 
-#include "plot_test.hpp"
-
-#include <window.hpp>
+#include <../display/window.hpp>
 
 #include <functional>
-#include <voltage_ode.hpp>
-
-void PlotTest::initProject(const std::shared_ptr<Project> &) {
-}
+#include <launcher.hpp>
+#include <QApplication>
+#include <../engine/math/voltage_ode.hpp>
 
 #define TO_F(func) [func](double const x) -> double { return func->compute(x); };
 
-void PlotTest::initWindow(Window *win) {
+int main(int ac, char **av) {
+    launcher::init();
+    QApplication app(ac, av);
+
+    /*Window *win;
     win->show();
 
     VoltageODE *test = new ExponentialVoltage(1, 1, 1);
@@ -25,5 +26,5 @@ void PlotTest::initWindow(Window *win) {
     win->plot(f2);
 
     std::function const test3 = [](double const x) -> double { return std::sin(x); };
-    win->plot(test3);
+    win->plot(test3);*/
 }

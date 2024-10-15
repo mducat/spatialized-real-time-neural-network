@@ -13,11 +13,20 @@ void Project::scaleTime(const double time) {
     _timeScale = time;
 }
 
+void Project::addCallback(const std::function<void()> &func) {
+    this->callbacks.push_back(func);
+}
+
+
 void Project::step() {
     double const delta = std::min(_delta.delta() * _timeScale, _maxAllowedDelta);
 
     for (const auto &layer : layers) {
         layer->step(delta);
+    }
+
+    for (const auto& callback : callbacks) {
+        callback();
     }
 }
 
@@ -26,7 +35,7 @@ std::shared_ptr<Layer> Project::createLayer(LayerType type) {
     this->layers.push_back(newLayer);
 
     std::string const current = layerTypeToString(type);
-    qCritical() << "Adding layer:" << layers.size() << "with type:" << current;
+    qCritical() << "Adding layer:" << layers.size() << "with type:" << current.c_str();
 
     return newLayer;
 }

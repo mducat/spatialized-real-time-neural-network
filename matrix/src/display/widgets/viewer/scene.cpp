@@ -1,94 +1,113 @@
 
 #include "scene.hpp"
 
+#include <object.hpp>
 #include <qgraphicsproxywidget.h>
 #include <qgraphicsscene.h>
 #include <qgraphicsview.h>
 #include <qpushbutton.h>
 
-
-MainScene::MainScene(QWidget *parent) : QWidget(parent) {
+LayerScene::LayerScene(QWidget *parent, std::shared_ptr<Layer> const & layer) : QWidget(parent), _layer(layer) {
     this->init();
 }
 
-void MainScene::init() {
-    auto const bouton = new QPushButton("Mon bouton entre en scène !");
-    auto const scene = new QGraphicsScene;
-    auto const proxy = new QGraphicsProxyWidget();
-
-    proxy->setWidget(bouton);
-    scene->addItem(proxy);
-
-    auto const view = new QGraphicsView(scene, this);
-
-    view->scale(2.0, 2.0);
+void LayerScene::lookupLayer() {
+    this->updateObjectMap();
+    this->updateView();
 }
 
-/*
- * TODO: adapt
-void MainScene::updateObjects() {
-    Vector2D zero = { 0.0, 0.0 };
-    fill(mvmts_.begin(), mvmts_.end(), zero);
+void LayerScene::init() {
+    this->lookupLayer();
+}
 
-    // Repulsion force between vertice pairs
-    for (vertex_id_t v_id = 0; v_id < g_.size(); v_id++) {
-        for (vertex_id_t other_id = v_id + 1; other_id < g_.size(); other_id++) {
-            if (v_id == other_id) {
-                continue;
-            }
+void LayerScene::updateObjectMap() {
+    auto layer_objects = this->_layer->getObjects();
+    std::vector<int> object_ids_to_remove;
 
-            Vector2D delta = positions[v_id] - positions[other_id];
-            double distance = delta.norm();
-            // TODO: handle distance == 0.0
-
-            // > 1000.0: not worth computing
-            if (distance > 1000.0) {
-                continue;
-            }
-
-            double repulsion = k_squared_ / distance;
-
-            mvmts_[v_id] += delta / distance * repulsion;
-            mvmts_[other_id] -= delta / distance * repulsion;
-        }
-
-        // Attraction force between edges
-        for (vertex_id_t adj_id : g_[v_id]) {
-            if (adj_id > v_id) {
-                continue;
-            }
-
-            Vector2D delta = positions[v_id] - positions[adj_id];
-            double distance = delta.norm();
-            if (distance == 0.0) {
-                continue;
-            }
-
-            double attraction = distance * distance / k_;
-
-            mvmts_[v_id] -= delta / distance * attraction;
-            mvmts_[adj_id] += delta / distance * attraction;
-        }
+    for (auto &[id, obj] : this->_objects) {
+        if (std::find(layer_objects.begin(), layer_objects.end(), obj->getObject()) == layer_objects.end())
+            object_ids_to_remove.push_back(id);
     }
 
-    // Max movement capped by current temperature
-    for (vertex_id_t v_id = 0; v_id < g_.size(); v_id++) {
-        double mvmt_norm = mvmts_[v_id].norm();
-        // < 1.0: not worth computing
-        if (mvmt_norm < 1.0) {
+    for (int id_to_remove : object_ids_to_remove) {
+        this->_objects[id_to_remove] = nullptr;
+    }
+
+    for (const auto& object : layer_objects) {
+        if (this->_objects.find(object->getObjectId()) != this->_objects.end())
             continue;
-        }
-        double capped_mvmt_norm = std::min(mvmt_norm, temp_);
-        Vector2D capped_mvmt = mvmts_[v_id] / mvmt_norm * capped_mvmt_norm;
 
-        positions[v_id] += capped_mvmt;
-    }
-
-    // Cool down fast until we reach 1.5, then stay at low temperature
-    if (temp_ > 1.5) {
-        temp_ *= 0.85;
-    } else {
-        temp_ = 1.5;
+        this->_objects[object->getObjectId()] = std::make_unique<ObjectDisplay>(object);
     }
 }
-*/
+
+void LayerScene::updateView() {
+    std::unordered_map<int, QVector2D> objects_movement;
+    // @todo loop in timer ?
+
+    float const mag = 2.0;
+    float temp_ = 1.0;
+
+    for (auto &[id, obj] : this->_objects) {
+        objects_movement[id] = QVector2D(0, 0);
+    }
+
+    for (auto &[id_a, obj_a] : this->_objects) {
+        for (auto &[id_b, obj_b] : this->_objects) {
+
+            if (id_a == id_b)
+                continue;
+
+            QVector2D delta = obj_a->getPosition() - obj_b->getPosition();
+            float const dist = delta.length();
+
+            if (dist > 1000)
+                continue;
+
+            float const repulsion = (mag * mag) / dist;
+
+            objects_movement[id_a] += delta / dist * repulsion;
+            objects_movement[id_b] -= delta / dist * repulsion;
+        }
+
+        for (auto object : obj_a->getObject()->getInputs()) {
+            int id_b = object->getObjectId();
+            std::unique_ptr<ObjectDisplay> &obj_b = this->_objects[id_b];
+
+            QVector2D delta = obj_a->getPosition() - obj_b->getPosition();
+            float const dist = delta.length();
+
+            if (dist < 1.0)
+                continue;
+
+            float const attraction = (dist * dist) / mag;
+
+            objects_movement[id_a] -= delta / dist * attraction;
+            objects_movement[id_b] += delta / dist * attraction;
+        }
+    }
+
+    for (auto [id, movement] : objects_movement) {
+        float const dist = movement.length();
+
+        float const capped_mvmt = std::min(dist, temp_);
+        QVector2D mov = movement / dist * capped_mvmt;
+
+        this->_objects[id]->update(mov.x(), mov.y());
+    }
+}
+
+LayerScene::ObjectDisplay::ObjectDisplay(std::shared_ptr<Object> const &object) : _object(object) {}
+
+std::shared_ptr<Object> LayerScene::ObjectDisplay::getObject() {
+    return this->_object;
+}
+
+QVector2D LayerScene::ObjectDisplay::getPosition() const {
+    return this->_position;
+}
+
+void LayerScene::ObjectDisplay::update(const float x, const float y) {
+    this->_position.setX(x);
+    this->_position.setY(y);
+};
