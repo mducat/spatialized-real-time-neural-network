@@ -23,8 +23,8 @@ public:
     std::vector<std::shared_ptr<Layer>> getLayers();
 
 private:
-    std::vector<std::shared_ptr<Layer>> layers;
-    std::vector<std::function<void()>> callbacks;
+    std::vector<std::shared_ptr<Layer>> _layers;
+    std::vector<std::function<void()>> _callbacks;
 
     Delta _delta;
     double _timeScale = 1.0;

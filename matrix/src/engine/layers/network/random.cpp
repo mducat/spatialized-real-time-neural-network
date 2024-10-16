@@ -4,23 +4,23 @@
 #include <cstdlib>
 
 double Random::value() const {
-    return this->state;
+    return this->_state;
 }
 
 Random::~Random() = default;
 
 void Random::update(double const delta) {
-    if (this->timeStep < 0)
+    if (this->_timeStep < 0)
         return;
 
-    this->counter += delta;
+    this->_counter += delta;
 
-    if (this->counter > this->timeStep) {
-        this->counter = 0;
+    if (this->_counter > this->_timeStep) {
+        this->_counter = 0;
 
         int val = std::rand() % 30;
         double cast = static_cast<double>(val) / 100;
 
-        this->state = cast;
+        this->_state = cast;
     }
 }

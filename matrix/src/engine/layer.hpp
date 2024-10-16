@@ -48,7 +48,7 @@ public:
 
 private:
 
-    LayerType layerType;
-    std::vector<std::shared_ptr<Object>> objects;
-    int layerId = -1;
+    LayerType _layerType;
+    std::vector<std::shared_ptr<Object>> _objects;
+    int _layerId = -1;
 };

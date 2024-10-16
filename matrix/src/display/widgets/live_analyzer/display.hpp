@@ -20,6 +20,6 @@ public:
 
 private:
 
-    QVBoxLayout *layout = nullptr;
-    std::vector<AnalyzerValue *> values;
+    QVBoxLayout *_layout = nullptr;
+    std::vector<AnalyzerValue *> _values;
 };

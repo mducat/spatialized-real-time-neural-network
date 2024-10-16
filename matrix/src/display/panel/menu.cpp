@@ -9,38 +9,38 @@
 #include <window.hpp>
 
 void MenuBar::init() {
-    this->menuBar = new QMenuBar(this);
+    this->_menuBar = new QMenuBar(this);
 
-    this->newProjectAction = new QAction(QIcon::fromTheme("document-new"), tr("&New Project"), this);
-    this->newProjectAction->setShortcuts(QKeySequence::New);
-    this->newProjectAction->setStatusTip(tr("Create a new project"));
-    connect(this->newProjectAction, &QAction::triggered, this, &MenuBar::newProject);
+    this->_newProjectAction = new QAction(QIcon::fromTheme("document-new"), tr("&New Project"), this);
+    this->_newProjectAction->setShortcuts(QKeySequence::New);
+    this->_newProjectAction->setStatusTip(tr("Create a new project"));
+    connect(this->_newProjectAction, &QAction::triggered, this, &MenuBar::newProject);
 
-    this->openProjectAction = new QAction(QIcon::fromTheme("document-open"), tr("&Open Project"), this);
-    this->openProjectAction->setShortcuts(QKeySequence::Open);
-    this->openProjectAction->setStatusTip(tr("Open a project from file"));
-    connect(this->openProjectAction, &QAction::triggered, this, &MenuBar::openProject);
+    this->_openProjectAction = new QAction(QIcon::fromTheme("document-open"), tr("&Open Project"), this);
+    this->_openProjectAction->setShortcuts(QKeySequence::Open);
+    this->_openProjectAction->setStatusTip(tr("Open a project from file"));
+    connect(this->_openProjectAction, &QAction::triggered, this, &MenuBar::openProject);
 
-    this->saveProjectAction = new QAction(QIcon::fromTheme("document-save"), tr("&Save Project"), this);
-    this->saveProjectAction->setShortcuts(QKeySequence::Save);
-    this->saveProjectAction->setStatusTip(tr("Save current project"));
-    connect(this->saveProjectAction, &QAction::triggered, this, &MenuBar::saveProject);
+    this->_saveProjectAction = new QAction(QIcon::fromTheme("document-save"), tr("&Save Project"), this);
+    this->_saveProjectAction->setShortcuts(QKeySequence::Save);
+    this->_saveProjectAction->setStatusTip(tr("Save current project"));
+    connect(this->_saveProjectAction, &QAction::triggered, this, &MenuBar::saveProject);
 
-    this->fileMenu = this->menuBar->addMenu(tr("&File"));
-    this->fileMenu->addAction(newProjectAction);
-    this->fileMenu->addAction(openProjectAction);
-    this->fileMenu->addAction(saveProjectAction);
+    this->_fileMenu = this->_menuBar->addMenu(tr("&File"));
+    this->_fileMenu->addAction(_newProjectAction);
+    this->_fileMenu->addAction(_openProjectAction);
+    this->_fileMenu->addAction(_saveProjectAction);
 
-    this->editMenu = this->menuBar->addMenu(tr("&Edit"));
-    this->helpMenu = this->menuBar->addMenu(tr("&Help"));
-    this->formatMenu = this->menuBar->addMenu(tr("&Format"));
+    this->_editMenu = this->_menuBar->addMenu(tr("&Edit"));
+    this->_helpMenu = this->_menuBar->addMenu(tr("&Help"));
+    this->_formatMenu = this->_menuBar->addMenu(tr("&Format"));
 }
 
 
 void MenuBar::newProject() {
     qDebug("newProject() called");
 
-    this->parent->setProject(std::make_shared<Project>());
+    this->_parent->setProject(std::make_shared<Project>());
 }
 
 void MenuBar::openProject() {
@@ -51,10 +51,10 @@ void MenuBar::saveProject() {
     qDebug("saveProject() called");
 }
 
-MenuBar::MenuBar(Window *window) : QWidget(window), parent(window) {
+MenuBar::MenuBar(Window *window) : QWidget(window), _parent(window) {
     this->init();
 }
 
 QMenuBar *MenuBar::getWidget() const {
-    return this->menuBar;
+    return this->_menuBar;
 }

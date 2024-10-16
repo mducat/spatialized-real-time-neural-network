@@ -12,19 +12,19 @@
 
 AnalyzerValue::AnalyzerValue(QWidget *parent, const std::function<double()> &value)
     : QWidget(parent),
-      source(std::make_shared<DynamicDataSource>(value)),
-      mode(points) {}
+      _source(std::make_shared<DynamicDataSource>(value)),
+      _mode(points) {}
 
 void AnalyzerValue::setDisplayMode(const DisplayMode m) {
-    mode = m;
+    _mode = m;
 }
 
 void AnalyzerValue::setMargin(double const m) {
-    margin = m;
+    _margin = m;
 }
 
 void AnalyzerValue::recordValue() const {
-    this->source->recordValue();
+    this->_source->recordValue();
 }
 
 QSize AnalyzerValue::sizeHint() const {
@@ -49,12 +49,12 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
     painter.fillRect(rectangle, QBrush(Qt::black, Qt::SolidPattern));
     painter.drawRect(rectangle);
 
-    auto const values = this->source->getValues();
-    double const maxY = this->source->getMaxValue();
-    double const minY = this->source->getMinValue();
+    auto const values = this->_source->getValues();
+    double const maxY = this->_source->getMaxValue();
+    double const minY = this->_source->getMinValue();
 
-    auto const xStep = width / static_cast<double>(this->source->getSize());
-    auto const yStep = height / ((maxY - minY) * margin);
+    auto const xStep = width / static_cast<double>(this->_source->getSize());
+    auto const yStep = height / ((maxY - minY) * _margin);
     auto const valuesCount = static_cast<double>(values.size());
     // auto const yOffset = yStep * std::abs(minY) * margin;
 
@@ -75,7 +75,7 @@ void AnalyzerValue::paintEvent(QPaintEvent *event) {
         QPointF point(x1, y1);
         QLineF datapoint(x1, y1, x2, y2);
 
-        switch (mode) {
+        switch (_mode) {
             case points:
                 painter.drawPoint(point);
             break;

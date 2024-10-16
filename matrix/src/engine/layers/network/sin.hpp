@@ -15,7 +15,7 @@ public:
 
 private:
 
-    double state = 0;
+    double _state = 0;
 };
 
 #endif //SIN_H

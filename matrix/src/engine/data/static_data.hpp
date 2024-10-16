@@ -14,7 +14,7 @@ public:
     void resolution(std::size_t);
 
 private:
-    std::function<double(double)> source;
+    std::function<double(double)> _source;
 
     void generateValues();
 };

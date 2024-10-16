@@ -6,58 +6,58 @@
 #include "math/voltage_ode.hpp"
 
 IntegrateFire::IntegrateFire() {
-    this->step = std::make_unique<LinearVoltage>(this->voltageRest);
+    this->_step = std::make_unique<LinearVoltage>(this->_voltageRest);
 }
 
 IntegrateFire::~IntegrateFire() = default;
 
 double IntegrateFire::value() const {
-    return this->state;
+    return this->_state;
 }
 
 void IntegrateFire::setMode(Mode) {
-    switch (mode) {
+    switch (_mode) {
         case LINEAR:
-            this->step = std::make_unique<LinearVoltage>(this->voltageRest);
+            this->_step = std::make_unique<LinearVoltage>(this->_voltageRest);
         break;
         case EXPONENTIAL:
-            this->step = std::make_unique<ExponentialVoltage>(this->voltageRest, this->eC0, this->eC1);
+            this->_step = std::make_unique<ExponentialVoltage>(this->_voltageRest, this->_eC0, this->_eC1);
         break;
         case QUADRATIC:
-            this->step = std::make_unique<QuadraticVoltage>(this->voltageRest, this->qC0, this->qC1);
+            this->_step = std::make_unique<QuadraticVoltage>(this->_voltageRest, this->_qC0, this->_qC1);
             break;
     }
 }
 
 void IntegrateFire::setStep(std::unique_ptr<VoltageODE> &&ode) {
-    this->step = std::move(ode);
+    this->_step = std::move(ode);
 }
 
 void IntegrateFire::update(const double _delta) {
     double externalCurrent = 0;
-    double deltaVoltage = this->step->compute(this->state);
+    double deltaVoltage = this->_step->compute(this->_state);
 
-    if (this->repolarization >= 0) {
-        this->repolarization += _delta;
+    if (this->_repolarization >= 0) {
+        this->_repolarization += _delta;
 
-        if (this->repolarization > this->refractoryPeriod)
-            this->repolarization = -1;
+        if (this->_repolarization > this->_refractoryPeriod)
+            this->_repolarization = -1;
 
-        this->state += 10 * deltaVoltage * _delta * (1 / this->tau);
+        this->_state += 10 * deltaVoltage * _delta * (1 / this->_tau);
 
         return;
     }
 
-    for (auto const &n : inputs)
+    for (auto const &n : _inputs)
         externalCurrent += n->value();
 
-    deltaVoltage += externalCurrent * this->resistance;
-    this->state += deltaVoltage * _delta * (1 / this->tau);
+    deltaVoltage += externalCurrent * this->_resistance;
+    this->_state += deltaVoltage * _delta * (1 / this->_tau);
 
-    if (this->state > this->voltageThreshold) {
-        this->state = this->voltageFire;
+    if (this->_state > this->_voltageThreshold) {
+        this->_state = this->_voltageFire;
 
-        this->repolarization = 0.0;
+        this->_repolarization = 0.0;
     }
 }
 

@@ -13,8 +13,8 @@ public:
     void update(double) override;
 
 private:
-    std::vector<std::shared_ptr<Object>> objects;
+    std::vector<std::shared_ptr<Object>> _objects;
 
-    std::vector<std::shared_ptr<Object>> inputObjects;
-    std::vector<std::shared_ptr<Object>> outputObjects;
+    std::vector<std::shared_ptr<Object>> _inputObjects;
+    std::vector<std::shared_ptr<Object>> _outputObjects;
 };

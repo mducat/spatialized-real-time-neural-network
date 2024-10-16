@@ -28,17 +28,17 @@ private:
     void openProject();
     void saveProject();
 
-    Window *parent = nullptr;
+    Window *_parent = nullptr;
 
-    QMenuBar *menuBar = nullptr;
+    QMenuBar *_menuBar = nullptr;
 
-    QAction *newProjectAction = nullptr;
-    QAction *openProjectAction = nullptr;
-    QAction *saveProjectAction = nullptr;
+    QAction *_newProjectAction = nullptr;
+    QAction *_openProjectAction = nullptr;
+    QAction *_saveProjectAction = nullptr;
 
-    QMenu *fileMenu = nullptr;
-    QMenu *editMenu = nullptr;
-    QMenu *helpMenu = nullptr;
-    QMenu *formatMenu = nullptr;
+    QMenu *_fileMenu = nullptr;
+    QMenu *_editMenu = nullptr;
+    QMenu *_helpMenu = nullptr;
+    QMenu *_formatMenu = nullptr;
 };
 

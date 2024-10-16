@@ -28,7 +28,7 @@ public:
 
     template<typename T, typename ...Args, std::enable_if_t<std::is_base_of_v<VoltageODE, T>>* = nullptr>
     void setODE(Args&&... args) {
-        this->step = std::make_unique<T>(args...);
+        this->_step = std::make_unique<T>(args...);
     }
 
     void update(double) override;
@@ -37,27 +37,27 @@ public:
 
 private:
 
-    Mode mode = LINEAR;
-    std::unique_ptr<VoltageODE> step;
+    Mode _mode = LINEAR;
+    std::unique_ptr<VoltageODE> _step;
 
-    double voltageThreshold = -0.55;
-    double voltageRest = -0.70;
-    double voltageReset = voltageRest;
-    double voltageFire = +0.40;
+    double _voltageThreshold = -0.55;
+    double _voltageRest = -0.70;
+    double _voltageReset = _voltageRest;
+    double _voltageFire = +0.40;
 
-    double tau = 2.0;
-    double resistance = 0.5;
+    double _tau = 2.0;
+    double _resistance = 0.5;
 
-    double repolarization = -1;
-    double refractoryPeriod = (1.0 / 5.0) * 2;
+    double _repolarization = -1;
+    double _refractoryPeriod = (1.0 / 5.0) * 2;
 
-    double state = voltageRest;
+    double _state = _voltageRest;
 
     // default quadratic mode eq params
-    double qC0 = 1.0;
-    double qC1 = 1.0;
+    double _qC0 = 1.0;
+    double _qC1 = 1.0;
 
     // default exponential mode eq params
-    double eC0 = 1.0;
-    double eC1 = 1.0;
+    double _eC0 = 1.0;
+    double _eC1 = 1.0;
 };

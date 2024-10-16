@@ -19,7 +19,7 @@ public:
     void setParams(std::vector<double>) override;
 
 private:
-    double c0;
+    double _c0;
 };
 
 class QuadraticVoltage final : public VoltageODE {
@@ -30,9 +30,9 @@ public:
     void setParams(std::vector<double>) override;
 
 private:
-    double c0;
-    double c1;
-    double c2;
+    double _c0;
+    double _c1;
+    double _c2;
 };
 
 class ExponentialVoltage final : public VoltageODE {
@@ -43,9 +43,9 @@ public:
     void setParams(std::vector<double>) override;
 
 private:
-    double c0;
-    double c1;
-    double c2;
+    double _c0;
+    double _c1;
+    double _c2;
 };
 
 #endif //VOLTAGE_ODE_HPP

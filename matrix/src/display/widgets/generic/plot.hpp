@@ -46,30 +46,30 @@ private:
     void drawLabels(QPainter *painter) const;
     void drawPoints(QPainter *painter) const;
 
-    std::shared_ptr<StaticDataSource> source;
+    std::shared_ptr<StaticDataSource> _source;
 
-    bool shouldDrawGrid = true;
-    bool shouldTrackMouse = true;
+    bool _shouldDrawGrid = true;
+    bool _shouldTrackMouse = true;
 
-    double const labelsMargin = 60.0;
-    double const graphOffset = 2.0;
+    double const _labelsMargin = 60.0;
+    double const _graphOffset = 2.0;
 
-    std::size_t const gridCount = 10.0;
-    int const labelPrecision = 2;
+    std::size_t const _gridCount = 10.0;
+    int const _labelPrecision = 2;
 
-    QPointF labelXOffset{- 15.0, + 20.0};
-    QPointF labelYOffset{+ 10.0, + 2.0};
+    QPointF _labelXOffset{- 15.0, + 20.0};
+    QPointF _labelYOffset{+ 10.0, + 2.0};
 
-    QPoint dragStartPos{};
-    QPointF dragStartRange{};
-    double deltaDrag = 0;
-    double deltaDragSave = 0;
+    QPoint _dragStartPos{};
+    QPointF _dragStartRange{};
+    double _deltaDrag = 0;
+    double _deltaDragSave = 0;
 
-    double widgetH = 0;
-    double widgetW = 0;
+    double _widgetH = 0;
+    double _widgetW = 0;
 
-    double graphH = 0;
-    double graphW = 0;
+    double _graphH = 0;
+    double _graphW = 0;
 };
 
 #endif //PLOT_HPP

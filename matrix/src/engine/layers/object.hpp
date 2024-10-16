@@ -24,7 +24,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<Object>> getInputs() const;
 
 private:
-    std::vector<std::shared_ptr<Object>> inputs;
+    std::vector<std::shared_ptr<Object>> _inputs;
 
-    int objectId = -1;
+    int _objectId = -1;
 };

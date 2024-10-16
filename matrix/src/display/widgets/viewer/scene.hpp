@@ -2,6 +2,7 @@
 #pragma once
 
 #include <project.hpp>
+#include <qgraphicsview.h>
 #include <qvectornd.h>
 #include <QWidget>
 
@@ -34,7 +35,10 @@ private:
 
     void updateObjectMap();
     void updateView();
+    void drawScene();
 
     std::unordered_map<int, std::unique_ptr<ObjectDisplay>> _objects;
     std::shared_ptr<Layer> _layer;
+    QGraphicsView *_view;
+    QGraphicsScene *_scene;
 };

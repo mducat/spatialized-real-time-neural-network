@@ -32,8 +32,8 @@ public:
 
 private:
 
-    std::shared_ptr<DynamicDataSource> source;
-    DisplayMode mode;
+    std::shared_ptr<DynamicDataSource> _source;
+    DisplayMode _mode;
 
-    double margin = 1.5;
+    double _margin = 1.5;
 };

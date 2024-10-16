@@ -4,7 +4,7 @@
 #include "debug.hpp"
 
 StaticDataSource::StaticDataSource(const std::function<double(double)> &getter)
-    : source(getter) {
+    : _source(getter) {
     this->generateValues();
 }
 
@@ -15,7 +15,7 @@ void StaticDataSource::generateValues() {
     this->values.clear();
 
     for (std::size_t i = 0; i < this->size; x += step, i++) {
-        double val = this->source(x);
+        double val = this->_source(x);
 
         if (i == 0) {
             minValue = val;

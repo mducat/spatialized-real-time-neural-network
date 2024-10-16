@@ -17,6 +17,18 @@ void LayerScene::lookupLayer() {
 }
 
 void LayerScene::init() {
+    /*auto const bouton = new QPushButton("Mon bouton entre en scène !");
+    auto const
+    auto const proxy = new QGraphicsProxyWidget();
+
+    proxy->setWidget(bouton);
+    scene->addItem(proxy);*/
+
+    this->_scene = new QGraphicsScene;
+    this->_view = new QGraphicsView(this->_scene, this);
+
+    this->_view->scale(2.0, 2.0);
+
     this->lookupLayer();
 }
 
@@ -95,6 +107,10 @@ void LayerScene::updateView() {
 
         this->_objects[id]->update(mov.x(), mov.y());
     }
+}
+
+void LayerScene::drawScene() {
+
 }
 
 LayerScene::ObjectDisplay::ObjectDisplay(std::shared_ptr<Object> const &object) : _object(object) {}

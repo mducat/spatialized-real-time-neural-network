@@ -22,12 +22,12 @@ public:
 
 private:
 
-    std::unordered_map<int, LayerScene*> scenes;
+    std::unordered_map<int, LayerScene*> _scenes;
 
-    Window *parent;
+    Window *_parent;
 
-    QTabWidget *layerTabs = nullptr;
-    QVBoxLayout *w_layout_ = nullptr;
+    QTabWidget *_layerTabs = nullptr;
+    QVBoxLayout *_w_layout_ = nullptr;
 
     void init();
 };

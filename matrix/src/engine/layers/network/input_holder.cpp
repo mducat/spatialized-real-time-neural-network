@@ -3,46 +3,46 @@
 
 #include <stdexcept>
 
-InputHolder::InputHolder(std::vector<double> vals) : values(std::move(vals)) {
-    if (values.empty())
+InputHolder::InputHolder(std::vector<double> vals) : _values(std::move(vals)) {
+    if (_values.empty())
         throw std::logic_error("Cannot hold an empty vector");
-    this->setValue(values[0]);
+    this->setValue(_values[0]);
 }
 
-InputHolder::InputHolder(const double v)  : state(v) {
-    this->timeStep = -1;
+InputHolder::InputHolder(const double v)  : _state(v) {
+    this->_timeStep = -1;
 }
 
 InputHolder::~InputHolder() = default;
 
 void InputHolder::update(const double delta) {
-    if (this->timeStep < 0)
+    if (this->_timeStep < 0)
         return;
 
-    this->counter += delta;
+    this->_counter += delta;
 
-    if (this->counter > this->timeStep) {
-        this->counter = 0;
-        this->cursor += 1;
-        this->cursor %= this->values.size();
+    if (this->_counter > this->_timeStep) {
+        this->_counter = 0;
+        this->_cursor += 1;
+        this->_cursor %= this->_values.size();
 
-        this->setValue(this->values[this->cursor]);
+        this->setValue(this->_values[this->_cursor]);
     }
 }
 
 double InputHolder::value() const {
-    return this->state;
+    return this->_state;
 }
 
 void InputHolder::setValue(const double val) {
-    this->state = val;
+    this->_state = val;
 }
 
 void InputHolder::setValues(std::vector<double> vals) {
-    this->values = std::move(vals);
+    this->_values = std::move(vals);
 }
 
 void InputHolder::setTimeStep(double const step) {
-    this->timeStep = step;
+    this->_timeStep = step;
 }
 

@@ -22,11 +22,11 @@ private:
 
     void init();
 
-    Window *parent;
+    Window *_parent;
 
-    QAction *start = nullptr;
-    QAction *stop = nullptr;
+    QAction *_start = nullptr;
+    QAction *_stop = nullptr;
 
-    QToolBar *toolbar = nullptr;
+    QToolBar *_toolbar = nullptr;
 };
 

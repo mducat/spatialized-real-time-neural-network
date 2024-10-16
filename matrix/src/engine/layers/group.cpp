@@ -9,6 +9,6 @@ LayerType Group::getDestinationLayer()
 
 void Group::update(const double delta)
 {
-    for (auto const &obj : objects)
+    for (auto const &obj : _objects)
         obj->update(delta);
 }

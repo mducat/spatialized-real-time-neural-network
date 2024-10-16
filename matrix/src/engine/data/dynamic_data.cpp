@@ -2,10 +2,10 @@
 #include "dynamic_data.hpp"
 
 DynamicDataSource::DynamicDataSource(const std::function<double()> &getter)
-    : source(getter) {}
+    : _source(getter) {}
 
 void DynamicDataSource::recordValue() {
-    const double val = this->source();
+    const double val = this->_source();
 
     if (val < minValue)
         minValue = val;

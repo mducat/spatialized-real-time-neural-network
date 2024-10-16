@@ -13,7 +13,7 @@ public:
     void recordValue();
 
 private:
-    std::function<double()> source;
+    std::function<double()> _source;
 
 };
 
