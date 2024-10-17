@@ -9,38 +9,38 @@ StaticDataSource::StaticDataSource(const std::function<double(double)> &getter)
 }
 
 void StaticDataSource::generateValues() {
-    const double step = (this->maxRange - this->minRange) / static_cast<double>(this->size);
-    double x = this->minRange;
+    const double step = (this->_max_range - this->_min_range) / static_cast<double>(this->_size);
+    double x = this->_min_range;
 
-    this->values.clear();
+    this->_values.clear();
 
-    for (std::size_t i = 0; i < this->size; x += step, i++) {
+    for (std::size_t i = 0; i < this->_size; x += step, i++) {
         double val = this->_source(x);
 
         if (i == 0) {
-            minValue = val;
-            maxValue = val * 1.1;
+            _min_value = val;
+            _max_value = val * 1.1;
         }
 
-        if (val < minValue)
-            minValue = val;
+        if (val < _min_value)
+            _min_value = val;
 
-        if (val > maxValue)
-            maxValue = val;
+        if (val > _max_value)
+            _max_value = val;
 
-        this->values.push_back(val);
+        this->_values.push_back(val);
     }
 }
 
 void StaticDataSource::range(const double min, const double max) {
-    this->minRange = min;
-    this->maxRange = max;
+    this->_min_range = min;
+    this->_max_range = max;
 
     this->generateValues();
 }
 
 void StaticDataSource::resolution(std::size_t _size) {
-    this->size = _size;
+    this->_size = _size;
 
     this->generateValues();
 }

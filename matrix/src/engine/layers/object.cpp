@@ -6,15 +6,15 @@
 
 Object::Object() {
     static int idCounter = 0;
-    this->_objectId = idCounter++;
+    this->_object_id = idCounter++;
 }
 
 int Object::getObjectId() const {
-    return this->_objectId;
+    return this->_object_id;
 }
 
 std::string Object::getObjectName() const {
-    return "<Object: " + std::string(typeid(*this).name()) + "_" + std::to_string(this->_objectId) + ">";
+    return "<Object: " + std::string(typeid(*this).name()) + "_" + std::to_string(this->_object_id) + ">";
 }
 
 void Object::connect(const std::shared_ptr<Object> &obj) {

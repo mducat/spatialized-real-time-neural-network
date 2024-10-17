@@ -38,7 +38,7 @@ public:
 
 private:
 
-    std::string doubleFormat(double) const;
+    [[nodiscard]] std::string doubleFormat(double) const;
 
     void drawGraph(QPainter *painter) const;
     void drawCursor(QPainter * painter) const;
@@ -48,28 +48,28 @@ private:
 
     std::shared_ptr<StaticDataSource> _source;
 
-    bool _shouldDrawGrid = true;
-    bool _shouldTrackMouse = true;
+    bool _should_draw_grid = true;
+    bool _should_track_mouse = true;
 
-    double const _labelsMargin = 60.0;
-    double const _graphOffset = 2.0;
+    double const _labels_margin = 60.0;
+    double const _graph_offset = 2.0;
 
-    std::size_t const _gridCount = 10.0;
-    int const _labelPrecision = 2;
+    std::size_t const _grid_count = 10.0;
+    int const _label_precision = 2;
 
-    QPointF _labelXOffset{- 15.0, + 20.0};
-    QPointF _labelYOffset{+ 10.0, + 2.0};
+    QPointF _label_x_offset{- 15.0, + 20.0};
+    QPointF _label_y_offset{+ 10.0, + 2.0};
 
-    QPoint _dragStartPos{};
-    QPointF _dragStartRange{};
-    double _deltaDrag = 0;
-    double _deltaDragSave = 0;
+    QPoint _drag_start_pos{};
+    QPointF _drag_start_range{};
+    double _delta_drag = 0;
+    double _delta_drag_save = 0;
 
-    double _widgetH = 0;
-    double _widgetW = 0;
+    double _widget_h = 0;
+    double _widget_w = 0;
 
-    double _graphH = 0;
-    double _graphW = 0;
+    double _graph_h = 0;
+    double _graph_w = 0;
 };
 
 #endif //PLOT_HPP

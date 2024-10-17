@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <QVBoxLayout>
 #include <QWidget>
 
 class LayerScene;
@@ -26,8 +25,7 @@ private:
 
     Window *_parent;
 
-    QTabWidget *_layerTabs = nullptr;
-    QVBoxLayout *_w_layout_ = nullptr;
+    QTabWidget *_layer_tabs = nullptr;
 
     void init();
 };

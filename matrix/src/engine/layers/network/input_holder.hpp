@@ -25,7 +25,7 @@ private:
 
     std::size_t _cursor = 0;
     double _counter = 0;
-    double _timeStep = 1.0;
+    double _time_step = 1.0;
     double _state = 0;
     std::vector<double> _values;
 };

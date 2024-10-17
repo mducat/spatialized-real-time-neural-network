@@ -17,7 +17,7 @@ public:
 private:
 
     double _counter = 0;
-    double _timeStep = 1.0;
+    double _time_step = 1.0;
     double _state = 0;
 };
 

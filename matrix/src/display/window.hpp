@@ -34,13 +34,13 @@ private:
     void initMenus();
     void initToolbar();
 
-    bool _dynamicLookup = false;
+    bool _dynamic_lookup = false;
 
     std::shared_ptr<Project> _project = nullptr;
 
-    QWidget *_centralWidget = nullptr;
-    MenuBar *_menuBar = nullptr;
-    Toolbar *_toolBar = nullptr;
-    SceneTabs *_sceneTabs = nullptr;
+    QWidget *_central_widget = nullptr;
+    MenuBar *_menu_bar = nullptr;
+    Toolbar *_tool_bar = nullptr;
+    SceneTabs *_scene_tabs = nullptr;
 
 };

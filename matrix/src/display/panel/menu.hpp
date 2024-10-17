@@ -30,15 +30,15 @@ private:
 
     Window *_parent = nullptr;
 
-    QMenuBar *_menuBar = nullptr;
+    QMenuBar *_menu_bar = nullptr;
 
-    QAction *_newProjectAction = nullptr;
-    QAction *_openProjectAction = nullptr;
-    QAction *_saveProjectAction = nullptr;
+    QAction *_new_project_action = nullptr;
+    QAction *_open_project_action = nullptr;
+    QAction *_save_project_action = nullptr;
 
-    QMenu *_fileMenu = nullptr;
-    QMenu *_editMenu = nullptr;
-    QMenu *_helpMenu = nullptr;
-    QMenu *_formatMenu = nullptr;
+    QMenu *_file_menu = nullptr;
+    QMenu *_edit_menu = nullptr;
+    QMenu *_help_menu = nullptr;
+    QMenu *_format_menu = nullptr;
 };
 

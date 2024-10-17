@@ -42,9 +42,13 @@ qt_add_library(mlib
         src/display/widgets/inspector/inspector.cpp
         src/display/widgets/inspector/object_list.cpp
         src/display/widgets/generic/plot.cpp
+        src/display/widgets/viewer/view.cpp
+        src/display/widgets/viewer/view.hpp
 
         src/display/panel/menu.cpp
         src/display/panel/toolbar.cpp
+        src/display/panel/scene_tabs.cpp
+        src/display/panel/scene_tabs.hpp
 
         # ENGINE
 
@@ -63,8 +67,6 @@ qt_add_library(mlib
         src/engine/data/dynamic_data.cpp
         src/engine/data/static_data.cpp
         src/engine/layers/network/random.cpp
-        src/display/panel/scene_tabs.cpp
-        src/display/panel/scene_tabs.hpp
 
 )
 

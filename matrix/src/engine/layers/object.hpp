@@ -23,8 +23,8 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<Object>> getInputs() const;
 
-private:
+protected:
     std::vector<std::shared_ptr<Object>> _inputs;
 
-    int _objectId = -1;
+    int _object_id = -1;
 };

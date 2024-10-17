@@ -40,18 +40,18 @@ private:
     Mode _mode = LINEAR;
     std::unique_ptr<VoltageODE> _step;
 
-    double _voltageThreshold = -0.55;
-    double _voltageRest = -0.70;
-    double _voltageReset = _voltageRest;
-    double _voltageFire = +0.40;
+    double _voltage_threshold = -0.55;
+    double _voltage_rest = -0.70;
+    double _voltage_reset = _voltage_rest;
+    double _voltage_fire = +0.40;
 
     double _tau = 2.0;
     double _resistance = 0.5;
 
     double _repolarization = -1;
-    double _refractoryPeriod = (1.0 / 5.0) * 2;
+    double _refractory_period = (1.0 / 5.0) * 2;
 
-    double _state = _voltageRest;
+    double _state = _voltage_rest;
 
     // default quadratic mode eq params
     double _qC0 = 1.0;

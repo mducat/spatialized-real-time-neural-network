@@ -6,7 +6,7 @@
 #include "math/voltage_ode.hpp"
 
 IntegrateFire::IntegrateFire() {
-    this->_step = std::make_unique<LinearVoltage>(this->_voltageRest);
+    this->_step = std::make_unique<LinearVoltage>(this->_voltage_rest);
 }
 
 IntegrateFire::~IntegrateFire() = default;
@@ -18,13 +18,13 @@ double IntegrateFire::value() const {
 void IntegrateFire::setMode(Mode) {
     switch (_mode) {
         case LINEAR:
-            this->_step = std::make_unique<LinearVoltage>(this->_voltageRest);
+            this->_step = std::make_unique<LinearVoltage>(this->_voltage_rest);
         break;
         case EXPONENTIAL:
-            this->_step = std::make_unique<ExponentialVoltage>(this->_voltageRest, this->_eC0, this->_eC1);
+            this->_step = std::make_unique<ExponentialVoltage>(this->_voltage_rest, this->_eC0, this->_eC1);
         break;
         case QUADRATIC:
-            this->_step = std::make_unique<QuadraticVoltage>(this->_voltageRest, this->_qC0, this->_qC1);
+            this->_step = std::make_unique<QuadraticVoltage>(this->_voltage_rest, this->_qC0, this->_qC1);
             break;
     }
 }
@@ -40,7 +40,7 @@ void IntegrateFire::update(const double _delta) {
     if (this->_repolarization >= 0) {
         this->_repolarization += _delta;
 
-        if (this->_repolarization > this->_refractoryPeriod)
+        if (this->_repolarization > this->_refractory_period)
             this->_repolarization = -1;
 
         this->_state += 10 * deltaVoltage * _delta * (1 / this->_tau);
@@ -49,13 +49,13 @@ void IntegrateFire::update(const double _delta) {
     }
 
     for (auto const &n : _inputs)
-        externalCurrent += n->value();
+        externalCurrent += std::static_pointer_cast<NetworkObject>(n)->value();
 
     deltaVoltage += externalCurrent * this->_resistance;
     this->_state += deltaVoltage * _delta * (1 / this->_tau);
 
-    if (this->_state > this->_voltageThreshold) {
-        this->_state = this->_voltageFire;
+    if (this->_state > this->_voltage_threshold) {
+        this->_state = this->_voltage_fire;
 
         this->_repolarization = 0.0;
     }

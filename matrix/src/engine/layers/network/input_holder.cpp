@@ -10,18 +10,18 @@ InputHolder::InputHolder(std::vector<double> vals) : _values(std::move(vals)) {
 }
 
 InputHolder::InputHolder(const double v)  : _state(v) {
-    this->_timeStep = -1;
+    this->_time_step = -1;
 }
 
 InputHolder::~InputHolder() = default;
 
 void InputHolder::update(const double delta) {
-    if (this->_timeStep < 0)
+    if (this->_time_step < 0)
         return;
 
     this->_counter += delta;
 
-    if (this->_counter > this->_timeStep) {
+    if (this->_counter > this->_time_step) {
         this->_counter = 0;
         this->_cursor += 1;
         this->_cursor %= this->_values.size();
@@ -43,6 +43,6 @@ void InputHolder::setValues(std::vector<double> vals) {
 }
 
 void InputHolder::setTimeStep(double const step) {
-    this->_timeStep = step;
+    this->_time_step = step;
 }
 

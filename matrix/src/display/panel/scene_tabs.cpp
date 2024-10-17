@@ -17,11 +17,11 @@ SceneTabs::SceneTabs(Window *window) : QWidget(window), _parent(window) {
 
 void SceneTabs::init() {
 
-    _w_layout_ = new QVBoxLayout(this);
-    this->setLayout(_w_layout_);
+    this->setLayout(new QVBoxLayout);
 
-    _layerTabs = new QTabWidget(this);
-    this->layout()->addWidget(_layerTabs);
+    _layer_tabs = new QTabWidget(this);
+    this->layout()->addWidget(_layer_tabs);
+    this->layout()->setContentsMargins(0,0,0,0);
 }
 
 void SceneTabs::lookupProject() {
@@ -31,7 +31,7 @@ void SceneTabs::lookupProject() {
         if (this->_scenes.find(layer->getLayerId()) != this->_scenes.end())
             continue;
 
-        _layerTabs->addTab(scene, QString::fromStdString(layer->name()));
+        _layer_tabs->addTab(scene, QString::fromStdString(layer->name()));
         this->_scenes[layer->getLayerId()] = scene;
     }
 }

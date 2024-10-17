@@ -7,15 +7,15 @@ DynamicDataSource::DynamicDataSource(const std::function<double()> &getter)
 void DynamicDataSource::recordValue() {
     const double val = this->_source();
 
-    if (val < minValue)
-        minValue = val;
+    if (val < _min_value)
+        _min_value = val;
 
-    if (val > maxValue)
-        maxValue = val;
+    if (val > _max_value)
+        _max_value = val;
 
-    this->values.push_back(val);
+    this->_values.push_back(val);
 
-    while (this->values.size() > this->size)
-        this->values.pop_front();
+    while (this->_values.size() > this->_size)
+        this->_values.pop_front();
 }
 

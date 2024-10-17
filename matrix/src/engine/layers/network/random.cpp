@@ -10,12 +10,12 @@ double Random::value() const {
 Random::~Random() = default;
 
 void Random::update(double const delta) {
-    if (this->_timeStep < 0)
+    if (this->_time_step < 0)
         return;
 
     this->_counter += delta;
 
-    if (this->_counter > this->_timeStep) {
+    if (this->_counter > this->_time_step) {
         this->_counter = 0;
 
         int val = std::rand() % 30;

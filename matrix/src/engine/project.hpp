@@ -27,8 +27,8 @@ private:
     std::vector<std::function<void()>> _callbacks;
 
     Delta _delta;
-    double _timeScale = 1.0;
+    double _time_scale = 1.0;
 
-    double _maxAllowedDelta = 0.2;
+    double _max_allowed_delta = 0.2;
 
 };

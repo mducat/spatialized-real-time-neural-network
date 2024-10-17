@@ -6,6 +6,11 @@
 #include <qgraphicsscene.h>
 #include <qgraphicsview.h>
 #include <qpushbutton.h>
+#include <qrandom.h>
+#include <qtimer.h>
+#include <QVBoxLayout>
+
+#include "view.hpp"
 
 LayerScene::LayerScene(QWidget *parent, std::shared_ptr<Layer> const & layer) : QWidget(parent), _layer(layer) {
     this->init();
@@ -13,21 +18,32 @@ LayerScene::LayerScene(QWidget *parent, std::shared_ptr<Layer> const & layer) : 
 
 void LayerScene::lookupLayer() {
     this->updateObjectMap();
-    this->updateView();
+    this->drawScene();
 }
 
 void LayerScene::init() {
-    /*auto const bouton = new QPushButton("Mon bouton entre en scène !");
-    auto const
-    auto const proxy = new QGraphicsProxyWidget();
+    this->setLayout(new QHBoxLayout);
 
-    proxy->setWidget(bouton);
-    scene->addItem(proxy);*/
+    this->layout()->setContentsMargins(0,0,0,0);
+    this->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     this->_scene = new QGraphicsScene;
-    this->_view = new QGraphicsView(this->_scene, this);
+    this->_view = new GraphicsView(this->_scene, this);
 
-    this->_view->scale(2.0, 2.0);
+    this->layout()->addWidget(this->_view);
+
+    this->_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    this->_view->setMouseTracking(true);
+
+    this->_view->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    // this->_view->setTransformationAnchor(QGraphicsView::NoAnchor);
+
+    _timer = new QTimer(this);
+    connect(_timer, &QTimer::timeout, this, QOverload<>::of(&LayerScene::updateView));
+
+    _timer->start(10);
 
     this->lookupLayer();
 }
@@ -42,22 +58,25 @@ void LayerScene::updateObjectMap() {
     }
 
     for (int id_to_remove : object_ids_to_remove) {
+        this->_scene->removeItem(this->_objects[id_to_remove]->getEllipse());
         this->_objects[id_to_remove] = nullptr;
     }
 
     for (const auto& object : layer_objects) {
-        if (this->_objects.find(object->getObjectId()) != this->_objects.end())
+        int const objectId = object->getObjectId();
+        if (this->_objects.find(objectId) != this->_objects.end())
             continue;
 
-        this->_objects[object->getObjectId()] = std::make_unique<ObjectDisplay>(object);
+        this->_objects[objectId] = std::make_unique<ObjectDisplay>(object);
+        this->_scene->addItem(this->_objects[objectId]->getEllipse());
     }
 }
 
 void LayerScene::updateView() {
     std::unordered_map<int, QVector2D> objects_movement;
-    // @todo loop in timer ?
+    // @todo stop timer when nothing to move
 
-    float const mag = 2.0;
+    float const mag = 200.0;
     float temp_ = 1.0;
 
     for (auto &[id, obj] : this->_objects) {
@@ -71,10 +90,13 @@ void LayerScene::updateView() {
                 continue;
 
             QVector2D delta = obj_a->getPosition() - obj_b->getPosition();
-            float const dist = delta.length();
+            float dist = delta.length();
 
-            if (dist > 1000)
+            if (dist > mag * mag)
                 continue;
+
+            if (dist == 0)
+                dist = 1.0;
 
             float const repulsion = (mag * mag) / dist;
 
@@ -82,14 +104,14 @@ void LayerScene::updateView() {
             objects_movement[id_b] -= delta / dist * repulsion;
         }
 
-        for (auto object : obj_a->getObject()->getInputs()) {
+        for (const auto &object : obj_a->getObject()->getInputs()) {
             int id_b = object->getObjectId();
-            std::unique_ptr<ObjectDisplay> &obj_b = this->_objects[id_b];
+            const std::unique_ptr<ObjectDisplay> &obj_b = this->_objects[id_b];
 
             QVector2D delta = obj_a->getPosition() - obj_b->getPosition();
-            float const dist = delta.length();
+            float dist = delta.length();
 
-            if (dist < 1.0)
+            if (dist < 30.0)
                 continue;
 
             float const attraction = (dist * dist) / mag;
@@ -100,20 +122,39 @@ void LayerScene::updateView() {
     }
 
     for (auto [id, movement] : objects_movement) {
-        float const dist = movement.length();
+        float dist = movement.length();
+
+        if (dist == 0)
+            dist = 1.0;
 
         float const capped_mvmt = std::min(dist, temp_);
         QVector2D mov = movement / dist * capped_mvmt;
+        // QVector2D pos = this->_objects[id]->getPosition() + mov;
 
-        this->_objects[id]->update(mov.x(), mov.y());
+        this->_objects[id]->update(mov);
     }
+    this->_view->centerOn(0,0);
 }
 
 void LayerScene::drawScene() {
-
+    this->_scene->update();
+    this->_view->repaint();
 }
 
-LayerScene::ObjectDisplay::ObjectDisplay(std::shared_ptr<Object> const &object) : _object(object) {}
+LayerScene::ObjectDisplay::ObjectDisplay(std::shared_ptr<Object> const &object)
+    : _object(object),
+      _ellipse(new QGraphicsEllipseItem(this->_position.x(), this->_position.y(), itemSize, itemSize)) {
+    _ellipse->setBrush(QBrush(Qt::white));
+
+    _position.setX(static_cast<float>(QRandomGenerator::global()->bounded(10.0)));
+    _position.setY(static_cast<float>(QRandomGenerator::global()->bounded(10.0)));
+
+    _ellipse->setPos(_position.toPoint());
+}
+
+LayerScene::ObjectDisplay::~ObjectDisplay() {
+    delete this->_ellipse;
+}
 
 std::shared_ptr<Object> LayerScene::ObjectDisplay::getObject() {
     return this->_object;
@@ -123,7 +164,12 @@ QVector2D LayerScene::ObjectDisplay::getPosition() const {
     return this->_position;
 }
 
-void LayerScene::ObjectDisplay::update(const float x, const float y) {
-    this->_position.setX(x);
-    this->_position.setY(y);
+void LayerScene::ObjectDisplay::update(const QVector2D delta) {
+    this->_position = this->_position + delta;
+
+    _ellipse->setPos(_ellipse->pos() + delta.toPoint());
+}
+
+QGraphicsEllipseItem *LayerScene::ObjectDisplay::getEllipse() const {
+    return this->_ellipse;
 };

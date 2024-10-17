@@ -10,7 +10,7 @@ void Project::init() {
 }
 
 void Project::scaleTime(const double time) {
-    _timeScale = time;
+    _time_scale = time;
 }
 
 void Project::addCallback(const std::function<void()> &func) {
@@ -19,7 +19,7 @@ void Project::addCallback(const std::function<void()> &func) {
 
 
 void Project::step() {
-    double const delta = std::min(_delta.delta() * _timeScale, _maxAllowedDelta);
+    double const delta = std::min(_delta.delta() * _time_scale, _max_allowed_delta);
 
     for (const auto &layer : _layers) {
         layer->step(delta);

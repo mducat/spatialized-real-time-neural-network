@@ -14,27 +14,27 @@ class QDrag;
 Plot::Plot(QWidget *parent, const std::function<double(double)> &getter)
     : QWidget(parent), _source(std::make_shared<StaticDataSource>(getter)) {
 
-    this->setMouseTracking(this->_shouldTrackMouse);
+    this->setMouseTracking(this->_should_track_mouse);
     this->setAcceptDrops(true);
 }
 
 void Plot::saveAs(const std::string &path) {
-    bool const wasTrackingMouse = this->_shouldTrackMouse;
-    this->_shouldTrackMouse = false;
+    bool const wasTrackingMouse = this->_should_track_mouse;
+    this->_should_track_mouse = false;
 
     QPixmap pixmap(this->size());
     this->render(&pixmap);
     pixmap.save(QString::fromStdString(path));
 
-    this->_shouldDrawGrid = wasTrackingMouse;
+    this->_should_draw_grid = wasTrackingMouse;
 }
 
 void Plot::setDrawGrid(bool const draw) {
-    this->_shouldDrawGrid = draw;
+    this->_should_draw_grid = draw;
 }
 
 void Plot::trackMouse(bool const track) {
-    this->_shouldTrackMouse = track;
+    this->_should_track_mouse = track;
     this->setMouseTracking(track);
 }
 
@@ -49,7 +49,7 @@ QSize Plot::sizeHint() const {
 std::string Plot::doubleFormat(double const value) const {
     std::stringstream stream;
     stream.setf(std::ios::fixed);
-    stream.precision(_labelPrecision);
+    stream.precision(_label_precision);
 
     stream << value;
 
@@ -65,7 +65,7 @@ void Plot::drawGraph(QPainter *painter) const {
 
 void Plot::drawCursor(QPainter *painter) const {
 
-    if (!this->_shouldTrackMouse)
+    if (!this->_should_track_mouse)
         return;
 
     QPen const pen(Qt::white, 0.5, Qt::DotLine);
@@ -77,8 +77,8 @@ void Plot::drawCursor(QPainter *painter) const {
     double const maxX = this->_source->getMaxRange();
     double const minX = this->_source->getMinRange();
 
-    auto const valXStep = (maxX - minX) / _graphW;
-    auto const valYStep = (maxY - minY) / _graphH;
+    auto const valXStep = (maxX - minX) / _graph_w;
+    auto const valYStep = (maxY - minY) / _graph_h;
 
     QPoint const mouse = this->mapFromGlobal(QCursor::pos());
 
@@ -86,21 +86,21 @@ void Plot::drawCursor(QPainter *painter) const {
         double const x1 = mouse.x();
         double const x2 = x1;
 
-        double const y1 = _graphOffset;
-        double const y2 = _graphH;
+        double const y1 = _graph_offset;
+        double const y2 = _graph_h;
 
         QLineF const cursorX(x1, y1, x2, y2);
         painter->drawLine(cursorX);
 
         std::string const val = doubleFormat(x1 * valXStep + minX);
 
-        QPointF const point(x2 + _labelXOffset.x(), y2 + _labelXOffset.y());
+        QPointF const point(x2 + _label_x_offset.x(), y2 + _label_x_offset.y());
         painter->drawText(point, val.data());
     }
 
     {
-        double const x1 = _graphOffset;
-        double const x2 = _graphW;
+        double const x1 = _graph_offset;
+        double const x2 = _graph_w;
 
         double const y1 = mouse.y();
         double const y2 = y1;
@@ -108,37 +108,37 @@ void Plot::drawCursor(QPainter *painter) const {
         QLineF const cursorY(x1, y1, x2, y2);
         painter->drawLine(cursorY);
 
-        std::string const val = doubleFormat((_graphH - y1) * valYStep + minY);
+        std::string const val = doubleFormat((_graph_h - y1) * valYStep + minY);
 
-        QPointF const point(x2 + _labelYOffset.x(), y2 + _labelYOffset.y());
+        QPointF const point(x2 + _label_y_offset.x(), y2 + _label_y_offset.y());
         painter->drawText(point, val.data());
     }
 }
 
 void Plot::drawGrid(QPainter *painter) const {
 
-    if (!_shouldDrawGrid)
+    if (!_should_draw_grid)
         return;
 
-    auto const xStep = _graphW / static_cast<double>(this->_gridCount);
-    auto const yStep = _graphH / static_cast<double>(this->_gridCount);
+    auto const xStep = _graph_w / static_cast<double>(this->_grid_count);
+    auto const yStep = _graph_h / static_cast<double>(this->_grid_count);
 
     QPen const pen(Qt::white, 0.5, Qt::DotLine);
     painter->setPen(pen);
 
-    double deltaDragModulo = _deltaDrag;
+    double deltaDragModulo = _delta_drag;
 
     while (deltaDragModulo > xStep)
         deltaDragModulo -= xStep;
     while (deltaDragModulo < 0)
         deltaDragModulo += xStep;
 
-    for (std::size_t i = 1; i < this->_gridCount; i++) {
-        double const x1 = static_cast<double>(i) * xStep + _graphOffset - deltaDragModulo;
+    for (std::size_t i = 1; i < this->_grid_count; i++) {
+        double const x1 = static_cast<double>(i) * xStep + _graph_offset - deltaDragModulo;
         double const x2 = x1;
 
-        double const y1 = _graphOffset;
-        double const y2 = _graphH;
+        double const y1 = _graph_offset;
+        double const y2 = _graph_h;
 
         QLineF datapoint(x1, y1, x2, y2);
         painter->drawLine(datapoint);
@@ -146,11 +146,11 @@ void Plot::drawGrid(QPainter *painter) const {
 
     // @todo deltaDragModulo Y
 
-    for (std::size_t i = 1; i < this->_gridCount; i++) {
-        double const x1 = _graphOffset;
-        double const x2 = _graphW;
+    for (std::size_t i = 1; i < this->_grid_count; i++) {
+        double const x1 = _graph_offset;
+        double const x2 = _graph_w;
 
-        double const y1 = static_cast<double>(i) * yStep + _graphOffset;
+        double const y1 = static_cast<double>(i) * yStep + _graph_offset;
         double const y2 = y1;
 
         QLineF datapoint(x1, y1, x2, y2);
@@ -160,10 +160,10 @@ void Plot::drawGrid(QPainter *painter) const {
 
 void Plot::drawLabels(QPainter *painter) const {
 
-    auto const count = static_cast<double>(this->_gridCount);
+    auto const count = static_cast<double>(this->_grid_count);
 
-    auto const xStep = _graphW / count;
-    auto const yStep = _graphH / count;
+    auto const xStep = _graph_w / count;
+    auto const yStep = _graph_h / count;
 
     double const maxY = this->_source->getMaxValue();
     double const minY = this->_source->getMinValue();
@@ -180,14 +180,14 @@ void Plot::drawLabels(QPainter *painter) const {
     painter->setPen(pen);
 
     // @todo deltaDragModulo X & Y
-    for (std::size_t i = 1; i < this->_gridCount + 1; i++) {
+    for (std::size_t i = 1; i < this->_grid_count + 1; i++) {
         auto const current = static_cast<double>(i);
-        double const x1 = current * xStep + _graphOffset + _labelXOffset.x();
+        double const x1 = current * xStep + _graph_offset + _label_x_offset.x();
 
-        double const y1 = _graphH + _labelXOffset.y();
+        double const y1 = _graph_h + _label_x_offset.y();
 
         if ((std::abs(mouse.x() - x1) < 30.0 || std::abs(mouse.x() - x1 - 20.0) < 30.0)
-            && this->_shouldTrackMouse)
+            && this->_should_track_mouse)
             continue;
 
         std::string const val = doubleFormat(current * valXStep + minX);
@@ -196,13 +196,13 @@ void Plot::drawLabels(QPainter *painter) const {
         painter->drawText(point, val.data());
     }
 
-    for (std::size_t i = 0; i < this->_gridCount; i++) {
+    for (std::size_t i = 0; i < this->_grid_count; i++) {
         auto const current = static_cast<double>(i);
-        double const x1 = _graphW + _labelYOffset.x();
+        double const x1 = _graph_w + _label_y_offset.x();
 
-        double const y1 = (count - current) * yStep + _graphOffset + _labelYOffset.y();
+        double const y1 = (count - current) * yStep + _graph_offset + _label_y_offset.y();
 
-        if (std::abs(mouse.y() - y1) < 20.0 && this->_shouldTrackMouse)
+        if (std::abs(mouse.y() - y1) < 20.0 && this->_should_track_mouse)
             continue;
 
         std::string const val = doubleFormat(current * valYStep + minY);
@@ -218,8 +218,8 @@ void Plot::drawPoints(QPainter *painter) const {
     double const maxY = this->_source->getMaxValue();
     double const minY = this->_source->getMinValue();
 
-    auto const xStep = _graphW / pointsCount;
-    auto const yStep = _graphH / (maxY - minY);
+    auto const xStep = _graph_w / pointsCount;
+    auto const yStep = _graph_h / (maxY - minY);
 
     painter->setPen(Qt::white);
 
@@ -229,11 +229,11 @@ void Plot::drawPoints(QPainter *painter) const {
 
         auto const step = static_cast<double>(i);
 
-        double const x1 = step * xStep + _graphOffset;
-        double const x2 = (step + 1) * xStep + _graphOffset;
+        double const x1 = step * xStep + _graph_offset;
+        double const x2 = (step + 1) * xStep + _graph_offset;
 
-        double const y1 = _graphH - yStep * (prev - minY) + _graphOffset;
-        double const y2 = _graphH - yStep * (next - minY) + _graphOffset;
+        double const y1 = _graph_h - yStep * (prev - minY) + _graph_offset;
+        double const y2 = _graph_h - yStep * (next - minY) + _graph_offset;
 
         QPointF point(x1, y1);
         QLineF datapoint(x1, y1, x2, y2);
@@ -252,13 +252,13 @@ void Plot::drawPoints(QPainter *painter) const {
 void Plot::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
 
-    _widgetH = static_cast<double>(this->height());
-    _widgetW = static_cast<double>(this->width());
+    _widget_h = static_cast<double>(this->height());
+    _widget_w = static_cast<double>(this->width());
 
-    _graphH = _widgetH - _labelsMargin - _graphOffset;
-    _graphW = _widgetW - _labelsMargin - _graphOffset;
+    _graph_h = _widget_h - _labels_margin - _graph_offset;
+    _graph_w = _widget_w - _labels_margin - _graph_offset;
 
-    const QRectF rectangle(0.0, 0.0, _widgetW - 1.0, _widgetH - 1.0);
+    const QRectF rectangle(0.0, 0.0, _widget_w - 1.0, _widget_h - 1.0);
     const QPen pen(Qt::white, 0.5);
 
     painter.setPen(pen);
@@ -266,7 +266,7 @@ void Plot::paintEvent(QPaintEvent *event) {
     painter.fillRect(rectangle, QBrush(Qt::black, Qt::SolidPattern));
     painter.drawRect(rectangle);
 
-    const QRectF rectangleGraph(_graphOffset, _graphOffset, _graphW, _graphH);
+    const QRectF rectangleGraph(_graph_offset, _graph_offset, _graph_w, _graph_h);
 
     painter.fillRect(rectangleGraph, QBrush(Qt::black, Qt::SolidPattern));
     painter.drawRect(rectangleGraph);
@@ -292,13 +292,13 @@ void Plot::mouseMoveEvent(QMouseEvent *event) {
 void Plot::dragMoveEvent(QDragMoveEvent *event) {
     QPoint const cursor = this->mapFromGlobal(QCursor::pos());
 
-    double const minX = this->_dragStartRange.x();
-    double const maxX = this->_dragStartRange.y();
+    double const minX = this->_drag_start_range.x();
+    double const maxX = this->_drag_start_range.y();
 
-    double delta = this->_dragStartPos.x() - cursor.x();
-    _deltaDrag = delta + this->_deltaDragSave;
+    double delta = this->_drag_start_pos.x() - cursor.x();
+    _delta_drag = delta + this->_delta_drag_save;
 
-    delta /= _graphW;
+    delta /= _graph_w;
     delta *= maxX - minX;
 
     this->_source->range(minX + delta, maxX + delta);
@@ -308,9 +308,9 @@ void Plot::dragMoveEvent(QDragMoveEvent *event) {
 }
 
 void Plot::dragEnterEvent(QDragEnterEvent *event) {
-    this->_dragStartPos = this->mapFromGlobal(QCursor::pos());
-    this->_dragStartRange = {this->_source->getMinRange(), this->_source->getMaxRange()};
-    this->_deltaDragSave = this->_deltaDrag;
+    this->_drag_start_pos = this->mapFromGlobal(QCursor::pos());
+    this->_drag_start_range = {this->_source->getMinRange(), this->_source->getMaxRange()};
+    this->_delta_drag_save = this->_delta_drag;
 
     event->acceptProposedAction();
 }
