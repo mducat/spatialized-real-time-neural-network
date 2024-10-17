@@ -5,7 +5,7 @@
 #include <algorithm>
 
 Object::Object() {
-    static int idCounter = 0;
+    static std::size_t idCounter = 0;
     this->_object_id = idCounter++;
 }
 

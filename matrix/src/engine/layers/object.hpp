@@ -26,5 +26,5 @@ public:
 protected:
     std::vector<std::shared_ptr<Object>> _inputs;
 
-    int _object_id = -1;
+    std::size_t _object_id = -1;
 };
