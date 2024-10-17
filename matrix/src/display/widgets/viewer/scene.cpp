@@ -56,21 +56,21 @@ void LayerScene::updateObjectMap() {
 
     for (auto const &[key, connection] : this->_connections) {
 
-        std::size_t output_it = connection->getOutputId();
-        std::size_t input_it = connection->getInputId();
+        std::size_t output_id = connection->getOutputId();
+        std::size_t input_id = connection->getInputId();
 
-        auto id_match_output = [&output_it](std::shared_ptr<Object> const &cmp) -> bool {
-            return output_it == cmp->getObjectId();
+        auto id_match_output = [&output_id](std::shared_ptr<Object> const &cmp) -> bool {
+            return output_id == cmp->getObjectId();
         };
 
-        auto id_match_input = [&input_it](std::shared_ptr<Object> const &cmp) -> bool {
-            return input_it == cmp->getObjectId();
+        auto id_match_input = [&input_id](std::shared_ptr<Object> const &cmp) -> bool {
+            return input_id == cmp->getObjectId();
         };
 
         if (std::find_if(layer_objects.begin(), layer_objects.end(), id_match_output) == layer_objects.end())
             connections_to_remove.push_back(key);
 
-        auto inputs = this->_objects[connection->getOutputId()]->getObject()->getInputs();
+        auto inputs = this->_objects[output_id]->getObject()->getInputs();
 
         if (std::find_if(inputs.begin(), inputs.end(), id_match_input) == inputs.end())
             connections_to_remove.push_back(key);
