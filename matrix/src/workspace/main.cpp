@@ -56,12 +56,12 @@ int main(int ac, char **av) {
 
     sin->update(2.5);
 
-    lif->connect(in1);
-    lif->connect(in2);
+    lif->addInput(in1);
+    lif->addInput(in2);
     //lif->connect(sin);
 
-    lif2->connect(in2);
-    lif2->connect(in3);
+    lif2->addInput(in2);
+    lif2->addInput(in3);
 
     // lif->connect(sinviz);
 

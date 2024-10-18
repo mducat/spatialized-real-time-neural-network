@@ -1,6 +1,7 @@
 
 #include "scene.hpp"
 
+#include <debug.hpp>
 #include <object.hpp>
 #include <qgraphicsproxywidget.h>
 #include <qgraphicsscene.h>
@@ -42,7 +43,7 @@ void LayerScene::init() {
     _timer = new QTimer(this);
     connect(_timer, &QTimer::timeout, this, QOverload<>::of(&LayerScene::updateView));
 
-    _timer->start(10);
+    _timer->start(100);
 
     this->lookupLayer();
 }
@@ -106,7 +107,7 @@ void LayerScene::updateObjectMap() {
             const std::size_t input_id = input->getObjectId();
             const std::size_t output_id = output->getObjectId();
 
-            std::string const key = input_id + "_" + output_id;
+            std::string const key = std::to_string(input_id) + "_" + std::to_string(output_id);
 
             const auto &input_display = this->_objects[input_id];
             const auto &output_display = this->_objects[output_id];
@@ -244,11 +245,11 @@ QGraphicsLineItem * LayerScene::ConnectionDisplay::getLine() const {
 
 LayerScene::ObjectDisplay::ObjectDisplay(std::shared_ptr<Object> const &object)
     : _object(object),
-      _ellipse(new QGraphicsEllipseItem(this->_position.x(), this->_position.y(), item_size, item_size)) {
+      _ellipse(new QGraphicsEllipseItem(0, 0, item_size, item_size)) {
     _ellipse->setBrush(QBrush(Qt::white));
 
-    _position.setX(static_cast<float>(QRandomGenerator::global()->bounded(10.0)));
-    _position.setY(static_cast<float>(QRandomGenerator::global()->bounded(10.0)));
+    _position.setX(static_cast<float>(QRandomGenerator::global()->bounded(1000.0)));
+    _position.setY(static_cast<float>(QRandomGenerator::global()->bounded(1000.0)));
 
     _ellipse->setPos(_position.toPoint());
 }

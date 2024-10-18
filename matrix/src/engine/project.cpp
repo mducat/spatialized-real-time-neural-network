@@ -35,7 +35,7 @@ std::shared_ptr<Layer> Project::createLayer(LayerType type) {
     this->_layers.push_back(newLayer);
 
     std::string const current = layerTypeToString(type);
-    qCritical() << "Adding layer:" << _layers.size() << "with type:" << current.c_str();
+    qInfo() << "Adding layer:" << _layers.size() << "with type:" << current.c_str();
 
     return newLayer;
 }

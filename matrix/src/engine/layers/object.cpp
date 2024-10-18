@@ -17,11 +17,11 @@ std::string Object::getObjectName() const {
     return "<Object: " + std::string(typeid(*this).name()) + "_" + std::to_string(this->_object_id) + ">";
 }
 
-void Object::connect(const std::shared_ptr<Object> &obj) {
+void Object::addInput(const std::shared_ptr<Object> &obj) {
     this->_inputs.push_back(obj);
 }
 
-void Object::disconnect(const std::shared_ptr<Object> &obj) {
+void Object::removeInput(const std::shared_ptr<Object> &obj) {
     auto const it = std::remove(this->_inputs.begin(), this->_inputs.end(), obj);
     this->_inputs.erase(it);
 }

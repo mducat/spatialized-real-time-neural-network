@@ -27,6 +27,8 @@ public:
 
     void lookupProject() const;
 
+    void status(const std::string &) const;
+
 private:
 
     void init();

@@ -15,13 +15,11 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event) {
 
     event->accept();
 
-    const QPointF delta = (this->_start_point - event->pos()) * 1;
+    const QPointF delta = (this->_start_point - event->pos()) / _scale;
 
     Q_FOREACH(QGraphicsItem *item, this->items()) {
         item->setPos(item->pos() - delta);
     }
-
-    // this->rotate(0.4);
 
     this->_start_point = event->position();
 }
@@ -53,21 +51,22 @@ void GraphicsView::wheelEvent(QWheelEvent *event) {
     QGraphicsView::wheelEvent(event);
 
     constexpr float fac = 1.05;
+    double scaling;
 
     if (event->angleDelta().y() > 0)
-        scale(fac, fac);
+        scaling = fac;
     else
-        scale(1.0/fac, 1.0/fac);
+        scaling = 1.0 / fac;
+
+    _scale *= scaling;
+    scale(scaling, scaling);
 }
 
 GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) : QGraphicsView(scene, parent) {
-    // this->setMouseTracking(true);
-    // this->setTransformationAnchor(NoAnchor);
-    // this->setAlignment(Qt::AlignCenter);
     this->setTransformationAnchor(NoAnchor);
     this->setResizeAnchor(NoAnchor);
     setDragMode(ScrollHandDrag);
-    this->setSceneRect(-500, -500, 500, 500);
+    this->setSceneRect(0, 0, 500, 500);
 }
 
 

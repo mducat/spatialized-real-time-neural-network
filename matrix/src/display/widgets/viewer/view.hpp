@@ -23,5 +23,7 @@ public:
 private:
     QPointF _start_point;
 
+    double _scale = 1.0;
+
     bool _dragging = false;
 };

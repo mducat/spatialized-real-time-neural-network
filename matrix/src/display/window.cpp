@@ -38,9 +38,7 @@ void Window::init() {
     const int y = (screenGeometry.height() - this->height()) / 2;
     this->move(x, y);
 
-    QString const message = tr("Matrix: init done");
-    statusBar()->showMessage(message);
-    qDebug("Matrix: init done");
+    status("Matrix: init done");
 }
 
 void Window::initPanels() {
@@ -69,4 +67,10 @@ void Window::initToolbar() {
 
 void Window::lookupProject() const {
     this->_scene_tabs->lookupProject();
+}
+
+void Window::status(const std::string &message) const {
+    QString const msg = tr(message.c_str());
+    statusBar()->showMessage(msg);
+    qInfo() << msg;
 }

@@ -18,8 +18,8 @@ public:
     [[nodiscard]] int getObjectId() const;
     [[nodiscard]] std::string getObjectName() const;
 
-    void connect(const std::shared_ptr<Object> &);
-    void disconnect(const std::shared_ptr<Object> &);
+    void addInput(const std::shared_ptr<Object> &);
+    void removeInput(const std::shared_ptr<Object> &);
 
     [[nodiscard]] std::vector<std::shared_ptr<Object>> getInputs() const;
 
