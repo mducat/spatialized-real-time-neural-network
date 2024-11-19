@@ -11,12 +11,13 @@
 #include <QVBoxLayout>
 #include <viewer/scene.hpp>
 
-SceneTabs::SceneTabs(Window *window) : QWidget(window), _parent(window) {
+#include "layer_display.hpp"
+
+SceneTabs::SceneTabs(Window *window) : _parent(window) {
     init();
-};
+}
 
 void SceneTabs::init() {
-
     this->setLayout(new QVBoxLayout);
 
     _layer_tabs = new QTabWidget(this);
@@ -26,11 +27,12 @@ void SceneTabs::init() {
 
 void SceneTabs::lookupProject() {
     for (auto const &layer : this->_parent->getProject()->getLayers()) {
-        auto const scene = new LayerScene(this, layer);
+        auto const scene = new LayerDisplay(layer);
 
         if (this->_scenes.find(layer->getLayerId()) != this->_scenes.end())
             continue;
 
+        qDebug() << this->size();
         _layer_tabs->addTab(scene, QString::fromStdString(layer->name()));
         this->_scenes[layer->getLayerId()] = scene;
     }

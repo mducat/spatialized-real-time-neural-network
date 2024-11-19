@@ -19,7 +19,7 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 public:
-    AnalyzerValue(QWidget *, const std::function<double()> &);
+    AnalyzerValue(const std::function<double()> &);
 
     enum DisplayMode { points, lines };
 

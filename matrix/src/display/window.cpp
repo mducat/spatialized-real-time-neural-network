@@ -42,17 +42,15 @@ void Window::init() {
 }
 
 void Window::initPanels() {
-    this->_central_widget = new QWidget(this);
+    this->_central_widget = new QWidget;
     setCentralWidget(this->_central_widget);
 
-    auto *layout = new QVBoxLayout(this->_central_widget);
-    layout->setContentsMargins(1, 1, 1, 1);
-    this->_central_widget->setLayout(layout);
-    this->_central_widget->setMouseTracking(true);
-    this->setMouseTracking(true);
+    this->_layout = new QVBoxLayout;
+    this->_layout->setContentsMargins(1, 1, 1, 1);
+    this->_central_widget->setLayout(this->_layout);
 
     this->_scene_tabs = new SceneTabs(this);
-    this->_central_widget->layout()->addWidget(this->_scene_tabs);
+    this->_layout->addWidget(this->_scene_tabs);
 }
 
 void Window::initMenus() {
@@ -61,7 +59,7 @@ void Window::initMenus() {
 }
 
 void Window::initToolbar() {
-    this->_tool_bar = new Toolbar(this);
+    this->_tool_bar = new Toolbar;
     this->addToolBar(this->_tool_bar->getWidget());
 }
 

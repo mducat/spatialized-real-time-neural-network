@@ -6,7 +6,7 @@
 
 #include <QWidget>
 
-class LayerScene;
+class LayerDisplay;
 class Window;
 class QTabWidget;
 
@@ -21,7 +21,7 @@ public:
 
 private:
 
-    std::unordered_map<int, LayerScene*> _scenes;
+    std::unordered_map<int, LayerDisplay*> _scenes;
 
     Window *_parent;
 

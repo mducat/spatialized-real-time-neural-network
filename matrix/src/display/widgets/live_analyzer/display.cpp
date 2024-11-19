@@ -4,7 +4,7 @@
 #include "display.hpp"
 #include "value.hpp"
 
-AnalyzerDisplay::AnalyzerDisplay(QWidget *parent) : QWidget(parent) {
+AnalyzerDisplay::AnalyzerDisplay() {
     _layout = new QVBoxLayout;
 
     this->setLayout(_layout);
@@ -13,7 +13,7 @@ AnalyzerDisplay::AnalyzerDisplay(QWidget *parent) : QWidget(parent) {
 AnalyzerValue *AnalyzerDisplay::addAnalyzer(const std::shared_ptr<NetworkObject> &obj) {
     const std::function ptr = [obj]() -> double { return obj->value(); };
 
-    const auto val = new AnalyzerValue(this, ptr);
+    const auto val = new AnalyzerValue(ptr);
     _layout->addWidget(val);
 
     _values.push_back(val);

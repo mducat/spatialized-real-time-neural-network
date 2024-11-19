@@ -6,7 +6,7 @@
 
 #include <QToolBar>
 
-Toolbar::Toolbar(Window *window) : QWidget(window), _parent(window) {
+Toolbar::Toolbar() {
     this->init();
 };
 

@@ -10,9 +10,8 @@
 
 #include "data/dynamic_data.hpp"
 
-AnalyzerValue::AnalyzerValue(QWidget *parent, const std::function<double()> &value)
-    : QWidget(parent),
-      _source(std::make_shared<DynamicDataSource>(value)),
+AnalyzerValue::AnalyzerValue(const std::function<double()> &value)
+    : _source(std::make_shared<DynamicDataSource>(value)),
       _mode(points) {}
 
 void AnalyzerValue::setDisplayMode(const DisplayMode m) {

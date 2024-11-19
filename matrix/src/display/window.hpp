@@ -6,6 +6,7 @@
 
 #include "panel/scene_tabs.hpp"
 
+class QVBoxLayout;
 class Toolbar;
 class MenuBar;
 class MainScene;
@@ -40,7 +41,9 @@ private:
 
     std::shared_ptr<Project> _project = nullptr;
 
+    QVBoxLayout *_layout = nullptr;
     QWidget *_central_widget = nullptr;
+
     MenuBar *_menu_bar = nullptr;
     Toolbar *_tool_bar = nullptr;
     SceneTabs *_scene_tabs = nullptr;

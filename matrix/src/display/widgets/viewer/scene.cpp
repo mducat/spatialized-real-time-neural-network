@@ -12,7 +12,7 @@
 
 #include "view.hpp"
 
-LayerScene::LayerScene(QWidget *parent, std::shared_ptr<Layer> const & layer) : QWidget(parent), _layer(layer) {
+LayerScene::LayerScene(std::shared_ptr<Layer> const & layer) : _layer(layer) {
     this->init();
 }
 
@@ -43,7 +43,7 @@ void LayerScene::init() {
     _timer = new QTimer(this);
     connect(_timer, &QTimer::timeout, this, QOverload<>::of(&LayerScene::updateView));
 
-    _timer->start(100);
+    _timer->start(10);
 
     this->lookupLayer();
 }
@@ -126,6 +126,8 @@ void LayerScene::updateObjectMap() {
 }
 
 void LayerScene::updateView() {
+    // qDebug() << this->size();
+
     std::unordered_map<std::size_t, QVector2D> objects_movement;
     // @todo stop timer when nothing to move
 

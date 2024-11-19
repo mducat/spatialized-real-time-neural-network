@@ -11,8 +11,8 @@
 
 class QDrag;
 
-Plot::Plot(QWidget *parent, const std::function<double(double)> &getter)
-    : QWidget(parent), _source(std::make_shared<StaticDataSource>(getter)) {
+Plot::Plot(const std::function<double(double)> &getter)
+    : _source(std::make_shared<StaticDataSource>(getter)) {
 
     this->setMouseTracking(this->_should_track_mouse);
     this->setAcceptDrops(true);

@@ -3,4 +3,4 @@
 
 #include "group.hpp"
 
-AnalyzerGroup::AnalyzerGroup(QWidget *parent) : QWidget(parent) {}
+AnalyzerGroup::AnalyzerGroup() {}

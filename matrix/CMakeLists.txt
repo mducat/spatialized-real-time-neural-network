@@ -45,10 +45,13 @@ qt_add_library(mlib
         src/display/widgets/viewer/view.cpp
         src/display/widgets/viewer/view.hpp
 
+        # UI - PANEL
+
         src/display/panel/menu.cpp
         src/display/panel/toolbar.cpp
         src/display/panel/scene_tabs.cpp
         src/display/panel/scene_tabs.hpp
+        src/display/panel/layer_display.cpp
 
         # ENGINE
 
@@ -57,10 +60,14 @@ qt_add_library(mlib
         src/engine/layers/group.cpp
         src/engine/layers/object.cpp
 
+        # ENGINE - NETWORK OBJ
+
         src/engine/layers/network/integrate_fire.cpp
         src/engine/layers/network/input_holder.cpp
         src/engine/layers/network/network_object.cpp
         src/engine/layers/network/sin.cpp
+
+        # ENGINE - UTILS
 
         src/engine/time/delta.cpp
         src/engine/math/voltage_ode.cpp

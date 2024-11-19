@@ -27,7 +27,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
 
 public:
-    explicit Plot(QWidget *parent, const std::function<double(double)> &);
+    explicit Plot(const std::function<double(double)> &);
 
     void saveAs(const std::string &);
     void setDrawGrid(bool);

@@ -67,7 +67,7 @@ class LayerScene final : public QWidget
     };
 
 public:
-    LayerScene(QWidget *parent, std::shared_ptr<Layer> const & layer);
+    LayerScene(std::shared_ptr<Layer> const & layer);
 
     void lookupLayer();
 
