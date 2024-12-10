@@ -6,6 +6,7 @@
 #include <qvectornd.h>
 #include <QWidget>
 
+class GraphicsView;
 constexpr float item_size = 20.0;
 
 class LayerScene final : public QWidget
@@ -71,6 +72,8 @@ public:
 
     void lookupLayer();
 
+    void selectObject(std::shared_ptr<Object> const &);
+
 private:
     void init();
 
@@ -78,10 +81,13 @@ private:
     void updateView();
     void drawScene();
 
+    void setObjectColor(std::shared_ptr<Object> const &obj, Qt::GlobalColor color);
+
     std::unordered_map<std::size_t, std::unique_ptr<ObjectDisplay>> _objects;
     std::unordered_map<std::string, std::shared_ptr<ConnectionDisplay>> _connections;
+    std::shared_ptr<Object> _selected_object;
     std::shared_ptr<Layer> _layer;
-    QGraphicsView *_view = nullptr;
+    GraphicsView *_view = nullptr;
     QGraphicsScene *_scene = nullptr;
 
     QTimer *_timer = nullptr;

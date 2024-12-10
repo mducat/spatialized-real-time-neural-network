@@ -20,6 +20,8 @@ protected:
 public:
     explicit GraphicsView(QGraphicsScene *, QWidget *);
 
+    void moveTo(QPointF pos) const;
+
 private:
     QPointF _start_point;
 

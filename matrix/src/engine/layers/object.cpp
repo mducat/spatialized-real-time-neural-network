@@ -9,7 +9,7 @@ Object::Object() {
     this->_object_id = idCounter++;
 }
 
-int Object::getObjectId() const {
+std::size_t Object::getObjectId() const {
     return this->_object_id;
 }
 

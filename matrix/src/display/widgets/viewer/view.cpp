@@ -69,4 +69,12 @@ GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) : QGraphicsVi
     this->setSceneRect(0, 0, 500, 500);
 }
 
+void GraphicsView::moveTo(QPointF pos) const {
+    auto const to_middle = QPointF(this->width() / 2, this->height() / 2);
+    pos -= to_middle;
+    Q_FOREACH(QGraphicsItem *item, this->items()) {
+        item->setPos(item->pos() - pos);
+    }
+}
+
 

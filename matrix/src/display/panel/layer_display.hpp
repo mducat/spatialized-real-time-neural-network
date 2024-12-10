@@ -15,6 +15,7 @@ class SceneTabs;
 class LayerScene;
 class Window;
 class QGridLayout;
+class Object;
 
 class LayerDisplay final : public QWidget
 {
@@ -35,4 +36,5 @@ private:
     std::shared_ptr<Layer> _layer;
 
     void init();
+    void selectObject(std::shared_ptr<Object> const &) const;
 };

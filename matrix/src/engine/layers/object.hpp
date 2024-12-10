@@ -15,7 +15,7 @@ public:
     virtual LayerType getDestinationLayer() = 0;
     virtual void update(double) = 0;
 
-    [[nodiscard]] int getObjectId() const;
+    [[nodiscard]] std::size_t getObjectId() const;
     [[nodiscard]] std::string getObjectName() const;
 
     void addInput(const std::shared_ptr<Object> &);

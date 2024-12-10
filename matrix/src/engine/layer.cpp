@@ -1,8 +1,8 @@
 
 
 #include <layer.hpp>
-#include <network_object.hpp>
 #include <object.hpp>
+#include <ranges>
 
 #include <stdexcept>
 
@@ -26,16 +26,16 @@ void Layer::addObject(const std::shared_ptr<Object> &obj) {
         throw std::logic_error("Can not add " + dest + " object to " + current + " layer type !");
     }
 
-    this->_objects.push_back(obj);
+    this->_objects[obj->getObjectId()] = obj;
 }
 
 void Layer::step(const double delta) {
-    for (const auto& object : _objects) {
+    for (const auto& object : _objects | std::views::values) {
         object->update(delta);
     }
 }
 
-std::vector<std::shared_ptr<Object>> Layer::getObjects() {
+std::unordered_map<std::size_t, std::shared_ptr<Object>> & Layer::getObjects() {
     return this->_objects;
 }
 
@@ -45,5 +45,9 @@ int Layer::getLayerId() const {
 
 std::string Layer::name() const {
     return layerTypeToString(this->_layer_type) + "_" + std::to_string(this->_layer_id);
+}
+
+std::shared_ptr<Object> & Layer::getObjectById(std::size_t object_id) {
+    return this->_objects[object_id];
 }
 

@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 class Object;
 
@@ -41,14 +42,16 @@ public:
     void addObject(const std::shared_ptr<Object> &);
     void step(double);
 
-    std::vector<std::shared_ptr<Object>> getObjects();
+    std::unordered_map<std::size_t, std::shared_ptr<Object>> &getObjects();
 
     [[nodiscard]] int getLayerId() const;
     [[nodiscard]] std::string name() const;
 
+    std::shared_ptr<Object> & getObjectById(std::size_t object_id);
+
 private:
 
     LayerType _layer_type;
-    std::vector<std::shared_ptr<Object>> _objects;
+    std::unordered_map<std::size_t, std::shared_ptr<Object>> _objects;
     int _layer_id = -1;
 };

@@ -1,4 +1,6 @@
 
+#include <ranges>
+
 #include "scene.hpp"
 
 #include <debug.hpp>
@@ -18,6 +20,28 @@ LayerScene::LayerScene(std::shared_ptr<Layer> const & layer) : _layer(layer) {
 
 void LayerScene::lookupLayer() {
     this->updateObjectMap();
+    this->drawScene();
+}
+
+void LayerScene::setObjectColor(std::shared_ptr<Object> const &obj, Qt::GlobalColor const color) {
+    std::size_t const objectId = obj->getObjectId();
+    QGraphicsEllipseItem *ellipse = this->_objects[objectId]->getEllipse();
+
+    ellipse->setBrush(QBrush(color));
+}
+
+void LayerScene::selectObject(std::shared_ptr<Object> const &obj) {
+    if (this->_selected_object) {
+        this->setObjectColor(this->_selected_object, Qt::white);
+    }
+
+    /*std::size_t const objectId = obj->getObjectId();
+    QGraphicsEllipseItem const *ellipse = this->_objects[objectId]->getEllipse();
+
+    this->_view->moveTo(QPointF(ellipse->x(),ellipse->y()));*/
+
+    this->_selected_object = obj;
+    this->setObjectColor(obj, Qt::red);
     this->drawScene();
 }
 
@@ -60,27 +84,32 @@ void LayerScene::updateObjectMap() {
         std::size_t output_id = connection->getOutputId();
         std::size_t input_id = connection->getInputId();
 
-        auto id_match_output = [&output_id](std::shared_ptr<Object> const &cmp) -> bool {
-            return output_id == cmp->getObjectId();
-        };
-
         auto id_match_input = [&input_id](std::shared_ptr<Object> const &cmp) -> bool {
             return input_id == cmp->getObjectId();
         };
 
-        if (std::find_if(layer_objects.begin(), layer_objects.end(), id_match_output) == layer_objects.end())
+        if (layer_objects.contains(output_id)) {
             connections_to_remove.push_back(key);
+            continue;
+        }
 
-        auto inputs = this->_objects[output_id]->getObject()->getInputs();
+        auto const inputs = this->_objects[output_id]->getObject()->getInputs();
 
-        if (std::find_if(inputs.begin(), inputs.end(), id_match_input) == inputs.end())
+        if (std::ranges::find_if(inputs, id_match_input) == inputs.end())
             connections_to_remove.push_back(key);
+    }
+
+    for (const auto& to_remove : connections_to_remove) {
+        this->_scene->removeItem(this->_connections[to_remove]->getLine());
+        this->_connections[to_remove] = nullptr;
     }
 
     // remove deleted objects
 
     for (auto &[id, obj] : this->_objects) {
-        if (std::find(layer_objects.begin(), layer_objects.end(), obj->getObject()) == layer_objects.end())
+        std::size_t const objectId = obj->getObject()->getObjectId();
+
+        if (!layer_objects.contains(objectId))
             object_ids_to_remove.push_back(id);
     }
 
@@ -91,9 +120,9 @@ void LayerScene::updateObjectMap() {
 
     // add points
 
-    for (const auto& object : layer_objects) {
-        int const objectId = object->getObjectId();
-        if (this->_objects.find(objectId) != this->_objects.end())
+    for (const auto& object : layer_objects | std::views::values) {
+        std::size_t const objectId = object->getObjectId();
+        if (this->_objects.contains(objectId))
             continue;
 
         this->_objects[objectId] = std::make_unique<ObjectDisplay>(object);
@@ -102,7 +131,7 @@ void LayerScene::updateObjectMap() {
 
     // add connections
 
-    for (const auto &output : layer_objects) {
+    for (const auto &output : layer_objects | std::views::values) {
         for (const auto &input : output->getInputs()) {
             const std::size_t input_id = input->getObjectId();
             const std::size_t output_id = output->getObjectId();

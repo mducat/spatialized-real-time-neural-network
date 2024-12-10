@@ -7,6 +7,9 @@
 #include <viewer/scene.hpp>
 
 #include "layer_display.hpp"
+
+#include <object.hpp>
+
 #include "scene_tabs.hpp"
 
 #include "inspector/inspector.hpp"
@@ -38,4 +41,10 @@ void LayerDisplay::init() {
     this->_layout->setColumnStretch(0, 100);
     this->_layout->setColumnStretch(1, 400);
     this->_layout->setColumnStretch(2, 100);
+
+    connect(this->_objects, &ObjectList::objectSelected, this, &LayerDisplay::selectObject); // NOLINT(*-unused-return-value)
+}
+
+void LayerDisplay::selectObject(std::shared_ptr<Object> const &object) const {
+    this->_scene->selectObject(object);
 }

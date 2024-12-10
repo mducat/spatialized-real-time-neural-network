@@ -2,7 +2,6 @@
 
 #include "integrate_fire.hpp"
 #include "layer.hpp"
-#include "debug.hpp"
 #include "math/voltage_ode.hpp"
 
 IntegrateFire::IntegrateFire() {

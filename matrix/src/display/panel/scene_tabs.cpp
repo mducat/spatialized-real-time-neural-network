@@ -29,7 +29,8 @@ void SceneTabs::lookupProject() {
     for (auto const &layer : this->_parent->getProject()->getLayers()) {
         auto const scene = new LayerDisplay(layer);
 
-        if (this->_scenes.find(layer->getLayerId()) != this->_scenes.end())
+        // @todo remove when deleted
+        if (this->_scenes.contains(layer->getLayerId()))
             continue;
 
         qDebug() << this->size();
