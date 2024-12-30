@@ -31,7 +31,7 @@ void Project::step() {
 }
 
 std::shared_ptr<Layer> Project::createLayer(LayerType type) {
-    auto newLayer = std::make_shared<Layer>(type);
+    auto newLayer = std::make_shared<Layer>(type, this);
     this->_layers.push_back(newLayer);
 
     std::string const current = layerTypeToString(type);

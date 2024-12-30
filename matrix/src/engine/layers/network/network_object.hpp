@@ -6,13 +6,13 @@
 
 enum class LayerType;
 
-class NetworkObject : public Object {
+class
+NetworkObject : public Object {
 public:
 
     ~NetworkObject() override = default;
 
     LayerType getDestinationLayer() override;
-    [[nodiscard]] virtual double value() const = 0;
 
 };
 

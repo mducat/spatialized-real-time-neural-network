@@ -14,13 +14,15 @@ class Toolbar final : public QWidget
 
 public:
 
-    explicit Toolbar();
+    explicit Toolbar(Window *parent);
 
     [[nodiscard]] QToolBar *getWidget() const;
 
 private:
 
     void init();
+
+    Window *_parent;
 
     QAction *_start = nullptr;
     QAction *_stop = nullptr;

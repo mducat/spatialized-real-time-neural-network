@@ -27,8 +27,13 @@ public:
     std::shared_ptr<Project> getProject();
 
     void lookupProject() const;
+    void runProject(int);
 
     void status(const std::string &) const;
+
+    void closeEvent(QCloseEvent *event) override;
+
+    void tick() const;
 
 private:
 
@@ -47,5 +52,5 @@ private:
     MenuBar *_menu_bar = nullptr;
     Toolbar *_tool_bar = nullptr;
     SceneTabs *_scene_tabs = nullptr;
-
+    QTimer * _timer = nullptr;
 };

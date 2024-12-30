@@ -2,6 +2,7 @@
 
 #include <layer.hpp>
 #include <object.hpp>
+#include <project.hpp>
 #include <ranges>
 
 #include <stdexcept>
@@ -9,8 +10,8 @@
 #include <qdebug.h>
 
 
-Layer::Layer(const LayerType layer_type)
-    : _layer_type(layer_type) {
+Layer::Layer(const LayerType layer_type, Project *parent)
+    : _layer_type(layer_type), _parent(parent) {
     static int layerIdCounter;
     this->_layer_id = layerIdCounter++;
 }
@@ -45,6 +46,10 @@ int Layer::getLayerId() const {
 
 std::string Layer::name() const {
     return layerTypeToString(this->_layer_type) + "_" + std::to_string(this->_layer_id);
+}
+
+void Layer::addCallback(const std::function<void()> &func) {
+    this->_parent->addCallback(func);
 }
 
 std::shared_ptr<Object> & Layer::getObjectById(std::size_t object_id) {

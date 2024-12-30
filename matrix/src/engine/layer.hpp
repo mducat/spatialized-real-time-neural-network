@@ -1,11 +1,13 @@
 
 #pragma once
 
+#include <functional>
 #include <vector>
 #include <memory>
 #include <string>
 #include <unordered_map>
 
+class Project;
 class Object;
 
 enum class LayerType {
@@ -30,7 +32,7 @@ static std::string layerTypeToString(const LayerType type) {
 class Layer {
 public:
 
-    explicit Layer(LayerType layer_type);
+    explicit Layer(LayerType layer_type, Project *parent);
 
     template<typename T, typename ...Args, std::enable_if_t<std::is_base_of_v<Object, T>>* = nullptr>
     std::shared_ptr<T> create(Args&&... args) {
@@ -46,11 +48,13 @@ public:
 
     [[nodiscard]] int getLayerId() const;
     [[nodiscard]] std::string name() const;
+    void addCallback(const std::function<void()> &func);
 
     std::shared_ptr<Object> & getObjectById(std::size_t object_id);
 
 private:
 
+    Project *_parent;
     LayerType _layer_type;
     std::unordered_map<std::size_t, std::shared_ptr<Object>> _objects;
     int _layer_id = -1;

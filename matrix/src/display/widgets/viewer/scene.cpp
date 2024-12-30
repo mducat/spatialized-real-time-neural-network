@@ -329,4 +329,4 @@ void LayerScene::ObjectDisplay::removeOutputConnection(std::shared_ptr<Connectio
 
 QGraphicsEllipseItem *LayerScene::ObjectDisplay::getEllipse() const {
     return this->_ellipse;
-};
+}

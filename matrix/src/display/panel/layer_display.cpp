@@ -47,4 +47,5 @@ void LayerDisplay::init() {
 
 void LayerDisplay::selectObject(std::shared_ptr<Object> const &object) const {
     this->_scene->selectObject(object);
+    this->_inspector->selectObject(object);
 }

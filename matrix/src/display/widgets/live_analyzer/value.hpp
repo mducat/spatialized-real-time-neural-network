@@ -25,7 +25,7 @@ public:
 
     void setDisplayMode(DisplayMode);
     void setMargin(double);
-    void recordValue() const;
+    void recordValue();
 
     [[nodiscard]] QSize minimumSizeHint() const override;
     [[nodiscard]] QSize sizeHint() const override;

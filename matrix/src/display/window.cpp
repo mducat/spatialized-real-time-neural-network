@@ -33,6 +33,9 @@ void Window::init() {
     initToolbar();
     initMenus();
 
+    _timer = new QTimer(this);
+    connect(_timer, &QTimer::timeout, this, QOverload<>::of(&Window::tick));
+
     const QRect screenGeometry = QApplication::primaryScreen()->geometry();
     const int x = (screenGeometry.width() - this->width()) / 2;
     const int y = (screenGeometry.height() - this->height()) / 2;
@@ -59,7 +62,7 @@ void Window::initMenus() {
 }
 
 void Window::initToolbar() {
-    this->_tool_bar = new Toolbar;
+    this->_tool_bar = new Toolbar(this);
     this->addToolBar(this->_tool_bar->getWidget());
 }
 
@@ -71,4 +74,17 @@ void Window::status(const std::string &message) const {
     QString const msg = tr(message.c_str());
     statusBar()->showMessage(msg);
     qInfo() << msg;
+}
+
+void Window::closeEvent(QCloseEvent *event) {
+    QMainWindow::closeEvent(event);
+    QApplication::quit();
+}
+
+void Window::tick() const {
+    this->_project->step();
+}
+
+void Window::runProject(int msec) {
+    this->_timer->start(msec);
 }

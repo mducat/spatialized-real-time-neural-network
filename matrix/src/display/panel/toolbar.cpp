@@ -6,7 +6,8 @@
 
 #include <QToolBar>
 
-Toolbar::Toolbar() {
+Toolbar::Toolbar(Window *parent)
+    : _parent(parent){
     this->init();
 };
 
@@ -25,8 +26,8 @@ void Toolbar::init() {
     this->_start = _toolbar->addAction(startIcon, QString::fromStdString("Run project"));
     this->_stop = _toolbar->addAction(stopIcon, QString::fromStdString("Pause project"));
 
-    /*auto cb = [&] {this->runProject(50);};
-    connect(start, &QAction::triggered, this, cb);
-    connect(stop, &QAction::triggered, this, &Window::pauseProject);*/
+    auto cb = [&] {this->_parent->runProject(50);};
+    connect(this->_start, &QAction::triggered, this, cb);
+    // connect(stop, &QAction::triggered, this, &Window::pauseProject);
 }
 

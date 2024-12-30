@@ -22,8 +22,9 @@ void AnalyzerValue::setMargin(double const m) {
     _margin = m;
 }
 
-void AnalyzerValue::recordValue() const {
+void AnalyzerValue::recordValue() {
     this->_source->recordValue();
+    this->repaint();
 }
 
 QSize AnalyzerValue::sizeHint() const {
