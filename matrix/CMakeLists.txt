@@ -10,6 +10,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 qt_standard_project_setup()
 
 include_directories(
+        lib/byteobject
+
         src/
         src/display
         src/display/widgets
@@ -30,6 +32,10 @@ include_directories(
 )
 
 qt_add_library(mlib
+
+        lib/byteobject/ByteObject.cpp
+        lib/byteobject/ByteObject.tcc
+
         src/launcher.cpp
 
         # UI
@@ -86,8 +92,9 @@ qt_add_executable(matrix     src/workspace/main.cpp)
 qt_add_executable(ui_test    src/workspace/ui_test.cpp)
 qt_add_executable(plot_test  src/workspace/plot_test.cpp)
 qt_add_executable(sinviz     src/workspace/sinviz.cpp)
+qt_add_executable(mnist      src/workspace/mnist.cpp)
 
-set (_executables_list "matrix;ui_test;plot_test;sinviz")
+set (_executables_list "matrix;ui_test;plot_test;sinviz;mnist")
 
 foreach (my_entry IN LISTS _executables_list)
 

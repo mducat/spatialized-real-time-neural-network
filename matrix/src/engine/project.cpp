@@ -17,9 +17,12 @@ void Project::addCallback(const std::function<void()> &func) {
     this->_callbacks.push_back(func);
 }
 
+void Project::step(double const force_delta) {
+    double delta = std::min(_delta.delta() * _time_scale, _max_allowed_delta);
 
-void Project::step() {
-    double const delta = std::min(_delta.delta() * _time_scale, _max_allowed_delta);
+    if (force_delta > delta) {
+        delta = force_delta;
+    }
 
     for (const auto &layer : _layers) {
         layer->step(delta);

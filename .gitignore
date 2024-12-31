@@ -2,4 +2,4 @@ matrix/build
 matrix/cmake-build-debug
 matrix/.qt
 matrix/.idea
-
+matrix/data

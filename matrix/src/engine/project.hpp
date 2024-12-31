@@ -13,7 +13,7 @@ public:
     Project();
 
     void init();
-    void step();
+    void step(double = 0);
 
     void scaleTime(double);
 
