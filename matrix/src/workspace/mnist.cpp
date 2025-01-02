@@ -2,58 +2,38 @@
 // Created by thornhill on 31/12/24.
 //
 
-#include <fstream>
 #include <launcher.hpp>
 
 #include "debug.hpp"
 #include "ByteObject.hpp"
 #include "ByteObject.tcc"
-
-int reverse(int i)
-{
-    unsigned int val = i;
-
-    if (sizeof(val) == 4)
-        val = ((val & 0xff) << 24) | ((val & 0xff00) << 8) | ((val & 0xff0000) >> 8) | ((val & 0xff000000) >> 24);
-    return val;
-}
+#include "dataset/loaders/mnist_loader.hpp"
 
 int main(int ac, char **av) {
     launcher::init();
-    ByteObject test;
 
-    auto path = "../data/mnist/train-labels-idx1-ubyte";
+    auto const path = "../data/mnist/train-labels-idx1-ubyte";
+    auto const labels_shape = std::make_shared<Tensor::Shape>(1);
+    auto test = loadMNIST(path, 2049, labels_shape);
 
-    std::ifstream ifs(path);
+    qDebug() << "test size:" << test.size();
 
-    if (!ifs.is_open()) {
-        qDebug() << "Unable to open file";
-        return 0;
-    }
+    qDebug() << "first label:" << test.at(0)->data()[0];
+    qDebug() << "second label:" << test.at(1)->data()[0];
+    qDebug() << "third label:" << test.at(2)->data()[0];
+    qDebug() << "fo label:" << test.at(3)->data()[0];
+    qDebug() << "fi label:" << test.at(4)->data()[0];
 
-    std::ifstream getsize(path, std::ifstream::ate);
-    auto size = getsize.tellg();
+    auto const path_imgs = "../data/mnist/train-images-idx3-ubyte";
+    auto const image_shape = std::make_shared<Tensor::Shape>(7, 7);
+    auto test2 = loadMNIST(path_imgs, 2051, image_shape);
 
-    test._data.resize(size);
-    ifs.read((char *)&(test._data[0]), size);
+    qDebug() << "test2 size:" << test2.size();
+    qDebug() << "test2 shape:" << test2.at(0)->shape()->count();
 
     // ifs >> test;
 
-    int32_t magic;
-    int32_t qty;
-
-    test >> magic;
-    test >> qty;
-
-    magic = reverse(magic);
-    qty = reverse(qty);
-
-    uint8_t label;
-    test >> label;
-    test >> label;
-    test >> label;
-
-    qDebug() << "Magic: " << magic;
-    qDebug() << "Qty: " << qty;
-    qDebug() << "Label: " << label;
+    // qDebug() << "Magic: " << magic;
+    // qDebug() << "Qty: " << qty;
+    // qDebug() << "Label: " << label;
 }

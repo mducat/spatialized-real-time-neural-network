@@ -9,7 +9,7 @@
 #include <QWidget>
 #include <QSize>
 
-#include "data/data_source.hpp"
+#include "data_source.hpp"
 
 class StaticDataSource;
 

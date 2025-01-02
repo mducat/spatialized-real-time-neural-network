@@ -8,7 +8,7 @@
 
 #include "value.hpp"
 
-#include "data/dynamic_data.hpp"
+#include "data_inspect/dynamic_data.hpp"
 
 AnalyzerValue::AnalyzerValue(const std::function<double()> &value)
     : _source(std::make_shared<DynamicDataSource>(value)),

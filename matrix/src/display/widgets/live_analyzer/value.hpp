@@ -8,8 +8,8 @@
 #include <QWidget>
 #include <QSize>
 
-#include "data/data_source.hpp"
-#include "data/dynamic_data.hpp"
+#include "data_source.hpp"
+#include "dynamic_data.hpp"
 
 class AnalyzerValue final : public QWidget
 {

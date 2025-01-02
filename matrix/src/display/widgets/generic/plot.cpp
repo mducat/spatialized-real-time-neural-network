@@ -7,7 +7,7 @@
 #include <QPainter>
 #include <sstream>
 
-#include "data/static_data.hpp"
+#include "data_inspect/static_data.hpp"
 
 class QDrag;
 

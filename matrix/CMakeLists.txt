@@ -24,7 +24,7 @@ include_directories(
         src/helpers
         src/engine
         src/engine/time
-        src/engine/data
+        src/engine/data_inspect
         src/engine/math
         src/engine/layers
         src/engine/layers/network
@@ -77,9 +77,13 @@ qt_add_library(mlib
 
         src/engine/time/delta.cpp
         src/engine/math/voltage_ode.cpp
-        src/engine/data/dynamic_data.cpp
-        src/engine/data/static_data.cpp
+        src/engine/data_inspect/dynamic_data.cpp
+        src/engine/data_inspect/static_data.cpp
         src/engine/layers/network/random.cpp
+
+        src/engine/dataset/tensor.cpp
+        src/engine/dataset/dataset.cpp
+        src/engine/dataset/loaders/mnist_loader.cpp
 
 )
 
@@ -88,7 +92,9 @@ target_link_libraries(mlib PRIVATE
         Qt6::Widgets
 )
 
-qt_add_executable(matrix     src/workspace/main.cpp)
+qt_add_executable(matrix     src/workspace/main.cpp
+        src/engine/dataset/loaders/mnist_loader.cpp
+        src/engine/dataset/loaders/mnist_loader.hpp)
 qt_add_executable(ui_test    src/workspace/ui_test.cpp)
 qt_add_executable(plot_test  src/workspace/plot_test.cpp)
 qt_add_executable(sinviz     src/workspace/sinviz.cpp)
