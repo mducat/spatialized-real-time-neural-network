@@ -2,6 +2,7 @@
 #include "inspector.hpp"
 
 #include <layer.hpp>
+#include <network_object.hpp>
 #include <object.hpp>
 #include <qformlayout.h>
 #include <QLabel>
@@ -14,7 +15,21 @@ Inspector::Inspector(std::shared_ptr<Layer> const & layer) : _layer(layer) {
 }
 
 void Inspector::selectObject(std::shared_ptr<Object> const &obj) {
-    this->inspectObject(obj);
+    switch (obj->getDestinationLayer()) {
+        case LayerType::ANY:
+            break;
+        case LayerType::NETWORK:
+            this->inspectNetworkObject(std::static_pointer_cast<NetworkObject>(obj));
+            break;
+        case LayerType::CNS:
+            break;
+        case LayerType::CELL:
+            break;
+        case LayerType::DATA:
+            break;
+        case LayerType::UNDEF:
+            break;
+    }
 }
 
 void Inspector::init() {
@@ -52,7 +67,7 @@ void static clearLayout(QLayout* layout) // NOLINT(*-no-recursion)
     }
 }
 
-void Inspector::inspectObject(std::shared_ptr<Object> const &obj) {
+void Inspector::inspectNetworkObject(std::shared_ptr<NetworkObject> const &obj) {
     clearLayout(_layout);
     this->_form_layout = new QFormLayout;
     this->_form_layout->setContentsMargins(10,5,10,10);

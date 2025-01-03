@@ -23,8 +23,6 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<Object>> getInputs() const;
 
-    [[nodiscard]] virtual double value() const = 0;
-
 protected:
     std::vector<std::shared_ptr<Object>> _inputs;
 

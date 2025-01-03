@@ -22,6 +22,8 @@ public:
 
     Tensor(std::vector<float> &&values, std::shared_ptr<Shape> &shape);
 
+    [[nodiscard]] float at(std::size_t index) const;
+
     std::vector<float> values();
     std::vector<float> data();
     std::shared_ptr<Shape> shape();

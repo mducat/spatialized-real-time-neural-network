@@ -4,6 +4,7 @@
 #include <qformlayout.h>
 #include <QWidget>
 
+class NetworkObject;
 class Object;
 class Layer;
 
@@ -23,5 +24,5 @@ private:
     QFormLayout * _form_layout = nullptr;
 
     void init();
-    void inspectObject(std::shared_ptr<Object> const &);
+    void inspectNetworkObject(std::shared_ptr<NetworkObject> const &);
 };

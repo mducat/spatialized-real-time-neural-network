@@ -29,6 +29,7 @@ include_directories(
         src/engine/layers
         src/engine/layers/network
         src/engine/layers/any
+        src/engine/layers/data
 )
 
 qt_add_library(mlib
@@ -68,10 +69,12 @@ qt_add_library(mlib
 
         # ENGINE - NETWORK OBJ
 
+        src/engine/layers/network/dataset_input.cpp
         src/engine/layers/network/integrate_fire.cpp
         src/engine/layers/network/input_holder.cpp
         src/engine/layers/network/network_object.cpp
         src/engine/layers/network/sin.cpp
+        src/engine/layers/network/random.cpp
 
         # ENGINE - UTILS
 
@@ -79,11 +82,13 @@ qt_add_library(mlib
         src/engine/math/voltage_ode.cpp
         src/engine/data_inspect/dynamic_data.cpp
         src/engine/data_inspect/static_data.cpp
-        src/engine/layers/network/random.cpp
 
         src/engine/dataset/tensor.cpp
-        src/engine/dataset/dataset.cpp
         src/engine/dataset/loaders/mnist_loader.cpp
+
+        src/engine/layers/data/dataset.cpp
+        src/engine/layers/data/data_object.cpp
+
 
 )
 
@@ -92,9 +97,7 @@ target_link_libraries(mlib PRIVATE
         Qt6::Widgets
 )
 
-qt_add_executable(matrix     src/workspace/main.cpp
-        src/engine/dataset/loaders/mnist_loader.cpp
-        src/engine/dataset/loaders/mnist_loader.hpp)
+qt_add_executable(matrix     src/workspace/main.cpp)
 qt_add_executable(ui_test    src/workspace/ui_test.cpp)
 qt_add_executable(plot_test  src/workspace/plot_test.cpp)
 qt_add_executable(sinviz     src/workspace/sinviz.cpp)

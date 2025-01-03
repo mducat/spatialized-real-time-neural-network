@@ -3,6 +3,7 @@
 //
 
 #include "tensor.hpp"
+#include "debug.hpp"
 
 #include <stdexcept>
 #include <utility>
@@ -15,6 +16,14 @@ Tensor::Tensor(std::vector<float> &&values, std::shared_ptr<Shape> &shape)
         std::string const details = "(" + std::to_string(this->_data.size()) + " % " + std::to_string(shape_mod) + "!= 0)";
         throw std::logic_error("Tensor size must be a multiple of the data size" + details);
     }
+}
+
+float Tensor::at(std::size_t index) const {
+    if (index >= this->_data.size()) {
+        throw std::out_of_range("index out of range in tensor");
+    }
+    // qDebug() << "Tensor::at(" << index << ") = " << this->_data[index];
+    return this->_data[index];
 }
 
 std::size_t Tensor::Shape::count() const {

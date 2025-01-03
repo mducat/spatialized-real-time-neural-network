@@ -12,6 +12,8 @@ public:
 
     ~NetworkObject() override = default;
 
+    [[nodiscard]] virtual double value() const = 0;
+
     LayerType getDestinationLayer() override;
 
 };

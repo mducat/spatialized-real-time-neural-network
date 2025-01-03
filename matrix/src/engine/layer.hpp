@@ -16,6 +16,7 @@ enum class LayerType {
     CNS      = 0,
     NETWORK  = 1,
     CELL     = 2,
+    DATA     = 3,
 };
 
 static std::string layerTypeToString(const LayerType type) {
@@ -23,6 +24,7 @@ static std::string layerTypeToString(const LayerType type) {
         case LayerType::CNS: return "CNS";
         case LayerType::NETWORK: return "NETWORK";
         case LayerType::CELL: return "CELL";
+        case LayerType::DATA: return "DATA";
         case LayerType::ANY: return "ANY";
         case LayerType::UNDEF:
         default: return "UNKNOWN";
