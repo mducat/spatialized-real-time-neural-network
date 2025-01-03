@@ -26,10 +26,10 @@ include_directories(
         src/engine/time
         src/engine/data_inspect
         src/engine/math
-        src/engine/layers
-        src/engine/layers/network
-        src/engine/layers/any
-        src/engine/layers/data
+        src/engine/objects
+        src/engine/objects/network
+        src/engine/objects/any
+        src/engine/objects/data
 )
 
 qt_add_library(mlib
@@ -64,17 +64,17 @@ qt_add_library(mlib
 
         src/engine/project.cpp
         src/engine/layer.cpp
-        src/engine/layers/group.cpp
-        src/engine/layers/object.cpp
+        src/engine/objects/group.cpp
+        src/engine/objects/object.cpp
 
         # ENGINE - NETWORK OBJ
 
-        src/engine/layers/network/dataset_input.cpp
-        src/engine/layers/network/integrate_fire.cpp
-        src/engine/layers/network/input_holder.cpp
-        src/engine/layers/network/network_object.cpp
-        src/engine/layers/network/sin.cpp
-        src/engine/layers/network/random.cpp
+        src/engine/objects/network/dataset_input.cpp
+        src/engine/objects/network/integrate_fire.cpp
+        src/engine/objects/network/input_holder.cpp
+        src/engine/objects/network/network_object.cpp
+        src/engine/objects/network/sin.cpp
+        src/engine/objects/network/random.cpp
 
         # ENGINE - UTILS
 
@@ -86,8 +86,8 @@ qt_add_library(mlib
         src/engine/dataset/tensor.cpp
         src/engine/dataset/loaders/mnist_loader.cpp
 
-        src/engine/layers/data/dataset.cpp
-        src/engine/layers/data/data_object.cpp
+        src/engine/objects/data/dataset.cpp
+        src/engine/objects/data/data_object.cpp
 
 
 )
