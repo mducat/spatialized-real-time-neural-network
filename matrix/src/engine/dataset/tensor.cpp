@@ -3,6 +3,9 @@
 //
 
 #include "tensor.hpp"
+
+#include <sstream>
+
 #include "debug.hpp"
 
 #include <stdexcept>
@@ -47,4 +50,20 @@ std::vector<float> Tensor::data() {
 
 std::shared_ptr<Tensor::Shape> Tensor::shape() {
     return _shape;
+}
+
+std::string Tensor::display() const {
+    std::stringstream stream;
+    stream << "[";
+
+    if (!this->_data.empty())
+        stream << this->_data[0];
+
+    for (std::size_t i = 1; i < this->_data.size(); i++) {
+        stream << ", ";
+        stream << this->_data[i];
+    }
+
+    stream << "]";
+    return stream.str();
 }

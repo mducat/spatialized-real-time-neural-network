@@ -12,7 +12,7 @@ class Dataset;
 class DatasetInput : public NetworkObject {
 public:
 
-    explicit DatasetInput(std::shared_ptr<Dataset>, std::size_t index);
+    explicit DatasetInput(const std::shared_ptr<Dataset> &, std::size_t index);
     ~DatasetInput() override;
 
     void update(double) override;

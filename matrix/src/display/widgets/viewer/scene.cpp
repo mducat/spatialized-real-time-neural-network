@@ -189,11 +189,11 @@ void LayerScene::updateView() {
         }
 
         for (const auto &object : obj_a->getObject()->getInputs()) {
-            int id_b = object->getObjectId();
+            std::size_t id_b = object->getObjectId();
             const std::unique_ptr<ObjectDisplay> &obj_b = this->_objects[id_b];
 
             QVector2D delta = obj_a->getPosition() - obj_b->getPosition();
-            float dist = delta.length();
+            const float dist = delta.length();
 
             if (dist < 30.0)
                 continue;
@@ -318,13 +318,13 @@ void LayerScene::ObjectDisplay::addOutputConnection(std::shared_ptr<ConnectionDi
 }
 
 void LayerScene::ObjectDisplay::removeInputConnection(std::shared_ptr<ConnectionDisplay> const &display) {
-    auto const it = std::remove(this->_input_connections.begin(), this->_input_connections.end(), display);
-    this->_input_connections.erase(it, this->_input_connections.end());
+    auto const it = std::ranges::remove(this->_input_connections, display);
+    this->_input_connections.erase(it.begin(), it.end());
 }
 
 void LayerScene::ObjectDisplay::removeOutputConnection(std::shared_ptr<ConnectionDisplay> const &display) {
-    auto const it = std::remove(this->_output_connections.begin(), this->_output_connections.end(), display);
-    this->_output_connections.erase(it, this->_output_connections.end());
+    auto const it = std::ranges::remove(this->_output_connections, display);
+    this->_output_connections.erase(it.begin(), it.end());
 }
 
 QGraphicsEllipseItem *LayerScene::ObjectDisplay::getEllipse() const {

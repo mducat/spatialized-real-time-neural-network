@@ -28,7 +28,11 @@ public:
     std::vector<float> data();
     std::shared_ptr<Shape> shape();
 
+    [[nodiscard]] std::string display() const;
+
 private:
     std::vector<float> _data;
     std::shared_ptr<Shape> _shape;
 };
+
+std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Tensor>& matrix);
