@@ -13,8 +13,10 @@ public:
     ~NetworkObject() override = default;
 
     [[nodiscard]] virtual double value() const = 0;
+    virtual void backwards(double);
 
     LayerType getDestinationLayer() override;
+    [[nodiscard]] std::shared_ptr<NetworkObject> getNetworkObjectAt(std::size_t index) const;
 
 };
 

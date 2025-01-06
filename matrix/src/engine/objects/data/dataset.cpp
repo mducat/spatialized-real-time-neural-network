@@ -7,11 +7,7 @@
 
 Dataset::~Dataset() = default;
 
-Dataset::Dataset(std::vector<std::shared_ptr<Tensor>> ins, std::vector<std::shared_ptr<Tensor>> outs)
-    : _inputs(std::move(ins)), _outputs(std::move(outs)), _size(std::min(_inputs.size(), _outputs.size()))
-{}
-
-void Dataset::update(double delta) {
+void Dataset::update(const double delta) {
     if (this->_time_step < 0)
         return;
 
@@ -24,10 +20,6 @@ void Dataset::update(double delta) {
     }
 }
 
-std::shared_ptr<Tensor> Dataset::input() const {
-    return this->_inputs[this->_index];
-}
-
-std::shared_ptr<Tensor> Dataset::output() const {
-    return this->_outputs[this->_index];
+std::shared_ptr<Tensor> Dataset::entry(const std::size_t series_idx) const {
+    return this->_series[series_idx][this->_index];
 }

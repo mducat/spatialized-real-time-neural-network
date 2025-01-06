@@ -2,12 +2,13 @@
 // Created by thornhill on 31/12/24.
 //
 
-#include <dataset_input.hpp>
+#include <dataset_entry.hpp>
 #include <integrate_fire.hpp>
 #include <launcher.hpp>
 #include <project.hpp>
 
 #include "debug.hpp"
+#include "loss.hpp"
 #include "data/dataset.hpp"
 #include "dataset/loaders/mnist_loader.hpp"
 
@@ -33,10 +34,10 @@ int main(int ac, char **av) {
 
     auto const &ds = data_layer->create<Dataset>(images_loaded, labels_loaded);
 
-    std::vector<std::shared_ptr<DatasetInput>> inputs;
+    std::vector<std::shared_ptr<DatasetEntry>> inputs;
 
     for (int index = 0; index < image_shape->count(); index++) {
-        auto const &input = network_layer->create<DatasetInput>(ds, index);
+        auto const &input = network_layer->create<DatasetEntry>(ds, index);
 
         inputs.push_back(input);
     }
@@ -54,6 +55,16 @@ int main(int ac, char **av) {
         layer_1.push_back(node);
     }
 
+    for (int index = 0; index < image_shape->count(); index++) {
+        auto const &input = network_layer->create<DatasetEntry>(ds, index);
+
+        inputs.push_back(input);
+    }
+
+    auto const &output = network_layer->create<DatasetEntry>(ds, 0, 1);
+
+    auto const &loss = network_layer->create<Loss<QuadraticLoss>>(output, layer_1[0]);
+
     project->init();
     project->step(1);
 
@@ -65,5 +76,6 @@ int main(int ac, char **av) {
     project->step(1000);
     qDebug() << "READ INPUT:" << inputs[3]->value();
     qDebug() << "READ LAYER:" << layer_1[3]->value();
+    qDebug() << "LOSS VALUE:" << loss->value();
 
 }

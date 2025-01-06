@@ -69,12 +69,18 @@ qt_add_library(mlib
 
         # ENGINE - NETWORK OBJ
 
-        src/engine/objects/network/dataset_input.cpp
+        src/engine/objects/network/dataset_entry.cpp
         src/engine/objects/network/integrate_fire.cpp
         src/engine/objects/network/input_holder.cpp
         src/engine/objects/network/network_object.cpp
         src/engine/objects/network/sin.cpp
         src/engine/objects/network/random.cpp
+        src/engine/objects/network/loss.cpp
+
+        # ENGINE - DATA OBJ
+
+        src/engine/objects/data/dataset.cpp
+        src/engine/objects/data/data_object.cpp
 
         # ENGINE - UTILS
 
@@ -82,12 +88,10 @@ qt_add_library(mlib
         src/engine/math/voltage_ode.cpp
         src/engine/data_inspect/dynamic_data.cpp
         src/engine/data_inspect/static_data.cpp
-
         src/engine/dataset/tensor.cpp
         src/engine/dataset/loaders/mnist_loader.cpp
-
-        src/engine/objects/data/dataset.cpp
-        src/engine/objects/data/data_object.cpp
+        src/engine/math/losses.cpp
+        src/engine/objects/network/loss.hpp
 
 
 )
