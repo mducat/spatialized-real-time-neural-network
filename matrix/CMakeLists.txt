@@ -5,7 +5,7 @@ project(matrix VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets WebSockets)
 
 qt_standard_project_setup()
 
@@ -60,6 +60,11 @@ qt_add_library(mlib
         src/display/panel/scene_tabs.hpp
         src/display/panel/layer_display.cpp
 
+        # UI - NETWORK
+
+        src/server/display_server.cpp
+        src/server/display_server.hpp
+
         # ENGINE
 
         src/engine/project.cpp
@@ -99,6 +104,7 @@ qt_add_library(mlib
 target_link_libraries(mlib PRIVATE
         Qt6::Core
         Qt6::Widgets
+        Qt6::WebSockets
 )
 
 qt_add_executable(matrix     src/workspace/main.cpp)
@@ -106,8 +112,9 @@ qt_add_executable(ui_test    src/workspace/ui_test.cpp)
 qt_add_executable(plot_test  src/workspace/plot_test.cpp)
 qt_add_executable(sinviz     src/workspace/sinviz.cpp)
 qt_add_executable(mnist      src/workspace/mnist.cpp)
+qt_add_executable(ws         src/workspace/ws.cpp)
 
-set (_executables_list "matrix;ui_test;plot_test;sinviz;mnist")
+set (_executables_list "matrix;ui_test;plot_test;sinviz;mnist;ws")
 
 foreach (my_entry IN LISTS _executables_list)
 
@@ -116,6 +123,7 @@ foreach (my_entry IN LISTS _executables_list)
     target_link_libraries("${my_entry}" PRIVATE
             Qt6::Core
             Qt6::Widgets
+            Qt6::WebSockets
             mlib
     )
 

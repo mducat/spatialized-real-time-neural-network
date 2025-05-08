@@ -21,6 +21,14 @@ DatasetEntry::DatasetEntry(
 
 DatasetEntry::~DatasetEntry() = default;
 
+void DatasetEntry::setTensorIndex(std::size_t idx) {
+    this->_tensor_index = idx;
+}
+
+void DatasetEntry::setSeriesIndex(std::size_t idx) {
+    this->_series_index = idx;
+}
+
 void DatasetEntry::update(double) {}
 
 double DatasetEntry::value() const {

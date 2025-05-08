@@ -11,12 +11,14 @@ class Project;
 class Object;
 
 enum class LayerType {
+    _L_START = -3,
     UNDEF    = -2,
     ANY      = -1,
     CNS      = 0,
     NETWORK  = 1,
     CELL     = 2,
     DATA     = 3,
+    _L_END   = 4,
 };
 
 static std::string layerTypeToString(const LayerType type) {

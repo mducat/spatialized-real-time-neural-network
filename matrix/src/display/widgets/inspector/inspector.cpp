@@ -67,7 +67,7 @@ void static clearLayout(QLayout* layout) // NOLINT(*-no-recursion)
     }
 }
 
-void Inspector::inspectNetworkObject(std::shared_ptr<NetworkObject> const &obj) {
+void Inspector::inspectNetworkObject(std::shared_ptr<NetworkObject> const & obj) {
     clearLayout(_layout);
     this->_form_layout = new QFormLayout;
     this->_form_layout->setContentsMargins(10,5,10,10);
@@ -84,8 +84,9 @@ void Inspector::inspectNetworkObject(std::shared_ptr<NetworkObject> const &obj) 
     label->setPalette(pal);
 
     auto *live = new QPushButton("Inspect live");
-    connect(live, &QPushButton::clicked, [&] { // NOLINT(*-unused-return-value)
-        std::function const rec = [obj] () -> double { return obj->value(); };
+    connect(live, &QPushButton::clicked, [this, obj] { // NOLINT(*-unused-return-value)
+        auto cpy = obj;
+        std::function const rec = [cpy] () -> double { return cpy->value(); };
         auto *val = new AnalyzerValue(rec);
 
         val->setDisplayMode(AnalyzerValue::lines);

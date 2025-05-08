@@ -4,6 +4,8 @@
 
 #include <deque>
 
+// @TODO: link scale (i.e. time)
+
 class DataSource {
 public:
     virtual ~DataSource() = default;

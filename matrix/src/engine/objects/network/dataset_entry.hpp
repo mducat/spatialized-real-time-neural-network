@@ -12,8 +12,11 @@ class Dataset;
 class DatasetEntry : public NetworkObject {
 public:
 
-    explicit DatasetEntry(const std::shared_ptr<Dataset> &, std::size_t, std::size_t = 0);
+    explicit DatasetEntry(const std::shared_ptr<Dataset> &, std::size_t tensor_idx, std::size_t series_idx = 0);
     ~DatasetEntry() override;
+
+    void setTensorIndex(std::size_t);
+    void setSeriesIndex(std::size_t);
 
     void update(double) override;
     [[nodiscard]] double value() const override;
