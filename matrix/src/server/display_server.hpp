@@ -11,6 +11,13 @@
 class QWebSocketServer;
 class QWebSocket;
 
+struct Request {
+    ByteObject data;
+    uint64_t request_id;
+};
+
+typedef std::shared_ptr<Request> ReqPtr;
+
 class DisplayServer final : public QObject {
     Q_OBJECT
 public:
@@ -28,15 +35,15 @@ private Q_SLOTS:
 
 private:
 
-    void process(QWebSocket *, ByteObject &);
+    void process(QWebSocket *, ReqPtr &);
 
-    void create(QWebSocket *, ByteObject &);
-    void read(QWebSocket *, ByteObject &);
-    void update(QWebSocket *, ByteObject &);
-    void del(QWebSocket *, ByteObject &);
-    void command(QWebSocket *, ByteObject &);
+    void create(QWebSocket *, ReqPtr &);
+    void read(QWebSocket *, ReqPtr &);
+    void update(QWebSocket *, ReqPtr &);
+    void del(QWebSocket *, ReqPtr &);
+    void command(QWebSocket *, ReqPtr &);
 
-    void cmd_meta(QWebSocket *, ByteObject &);
+    void cmd_meta(QWebSocket *, ReqPtr &);
 
     QWebSocketServer *_server;
     QList<QWebSocket *> _clients;
@@ -44,4 +51,4 @@ private:
     std::map<uint16_t, std::shared_ptr<Project>> _projects;
 };
 
-ByteObject status(uint8_t status);
+ByteObject status(uint8_t status, ReqPtr &obj);
