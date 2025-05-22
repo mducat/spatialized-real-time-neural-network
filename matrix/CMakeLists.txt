@@ -16,6 +16,8 @@ include_directories(
         src/display
         src/display/widgets
         src/display/widgets/live_analyzer
+        src/server
+        src/server/controllers
         src/workspace
         src/workspace/sinviz
         src/workspace/plot_test
@@ -64,6 +66,12 @@ qt_add_library(mlib
 
         src/server/display_server.cpp
         src/server/display_server.hpp
+        src/server/blueprint.cpp
+        src/server/blueprint.hpp
+        src/server/client.cpp
+        src/server/client.hpp
+        src/server/controllers/create.cpp
+        src/server/controllers/controllers.hpp
 
         # ENGINE
 
@@ -97,7 +105,9 @@ qt_add_library(mlib
         src/engine/dataset/loaders/mnist_loader.cpp
         src/engine/math/losses.cpp
         src/engine/objects/network/loss.hpp
+        src/server/controllers/command.cpp
 
+        # UNSORTED
 
 )
 

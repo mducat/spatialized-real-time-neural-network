@@ -4,19 +4,15 @@
 
 #pragma once
 
-#include <ByteObject.hpp>
-#include <project.hpp>
 #include <QObject>
 
+#include "project.hpp"
+#include "client.hpp"
+
+class Blueprint;
 class QWebSocketServer;
 class QWebSocket;
 
-struct Request {
-    ByteObject data;
-    uint64_t request_id;
-};
-
-typedef std::shared_ptr<Request> ReqPtr;
 
 class DisplayServer final : public QObject {
     Q_OBJECT
@@ -35,20 +31,17 @@ private Q_SLOTS:
 
 private:
 
-    void process(QWebSocket *, ReqPtr &);
+    void init_blueprint() const;
 
-    void create(QWebSocket *, ReqPtr &);
-    void read(QWebSocket *, ReqPtr &);
-    void update(QWebSocket *, ReqPtr &);
-    void del(QWebSocket *, ReqPtr &);
-    void command(QWebSocket *, ReqPtr &);
-
-    void cmd_meta(QWebSocket *, ReqPtr &);
+    // void process(client_t &, req_t &);
 
     QWebSocketServer *_server;
     QList<QWebSocket *> _clients;
 
-    std::map<uint16_t, std::shared_ptr<Project>> _projects;
+    std::unique_ptr<Blueprint> _bp;
+
+    std::unordered_map<QWebSocket *, std::shared_ptr<ClientData>> _clients_data;
+
+    //std::unordered_map<uint16_t, std::shared_ptr<Project>> _projects;
 };
 
-ByteObject status(uint8_t status, ReqPtr &obj);

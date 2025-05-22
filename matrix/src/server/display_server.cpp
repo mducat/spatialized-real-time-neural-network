@@ -11,14 +11,20 @@
 #include "protocol.hpp"
 
 #include <ByteObject.hpp>
-#include <random.hpp>
+// #include <random.hpp>
 
+#include <qaccessible_base.h>
+
+#include "blueprint.hpp"
 #include "ByteObject.tcc"
+#include "controllers/controllers.hpp"
 
 DisplayServer::DisplayServer() :
     _server(new QWebSocketServer(QStringLiteral("Display Server"),
-        QWebSocketServer::NonSecureMode, this))
-{}
+        QWebSocketServer::NonSecureMode, this)),
+    _bp(std::make_unique<Blueprint>()) {
+    this->init_blueprint();
+}
 
 DisplayServer::~DisplayServer() {
     _server->close();
@@ -42,6 +48,7 @@ void DisplayServer::connected() {
     qDebug() << "new client connected" << socket->peerAddress().toString();
 
     _clients << socket;
+    _clients_data[socket] = std::make_shared<ClientData>();
 }
 
 void DisplayServer::disconnected() {
@@ -50,41 +57,99 @@ void DisplayServer::disconnected() {
     qDebug() << "new client disconnected" << socket->peerAddress();
 
     _clients.removeOne(socket);
-}
-
-void operator<<(QWebSocket * const socket, ByteObject const &obj) {
-    QByteArray resp_bin;
-    resp_bin.append(reinterpret_cast<const char *>(obj.dumpForNetwork().data()), obj._size);
-
-    socket->sendBinaryMessage(resp_bin);
+    _clients_data[socket] = nullptr;
 }
 
 void DisplayServer::message(QByteArray data) {
     auto socket = qobject_cast<QWebSocket *>(sender());
 
     ByteObject obj(reinterpret_cast<uint8_t const *>(data.constData()), data.size());
+    qDebug() << "new client message" << socket->peerAddress() << obj._size;
 
     uint64_t request_id;
     obj >> request_id;
 
     auto request = std::make_shared<Request>(obj, request_id);
+    auto client = std::make_shared<WSClient>(socket, _clients_data[socket]);
 
     try {
-        process(socket, request);
+        this->_bp->process(client, request);
     } catch (const std::exception &e) {
         qCritical() << "Exception: " << e.what();
         socket << (status(STATUS_INTERNAL_PANIC, request) << e.what());
     }
-
-    qDebug() << "new client message" << socket->peerAddress() << obj._size;
 }
+
+void DisplayServer::init_blueprint() const {
+    this->_bp->declare_registry();
+
+    const auto create = this->_bp->add_controller("create");
+    create->add_method("project", ws::create::project);
+
+    const auto command = this->_bp->add_controller("command");
+    this->_bp->add_alias("cmd", "command");
+
+    command->add_method("status", ws::command::status);
+
+    const auto cmd_meta = command->add_controller("meta");
+    cmd_meta->add_method("types", ws::command::meta::types);
+}
+
+/*
+#define T_INSTRUCTION(x) switch (x)
+#define CASE(x, y) case x: y; break;
+
+std::unordered_map<uint64_t, void (DisplayServer::*)(QWebSocket *, ReqPtr &)> methods = {
+    {CREATE, &DisplayServer::create},
+    {READ, &DisplayServer::read},
+    {UPDATE, &DisplayServer::update},
+    {DELETE, &DisplayServer::del},
+    {COMMAND, &DisplayServer::command},
+};*/
+
+/*
+ * std::shared_ptr<Blueprint> bp = std::make_shared<Blueprint>();
+ *
+ * auto create = bp->add_controller("create");
+ *
+ * create->add_method("project", &DisplayServer::create_project);
+ * create->add_method("project", &ws::create::project);
+ *
+ * auto params = std::vector{PARAM(uint16_t, layer_type)};
+ *
+ * create->add_method("layer", [&] (socket, obj){
+ *      uint16_t layer_type;
+ *      obj >> layer_type;
+ *      this->_project->createLayer(layer_type);
+ * });
+ *
+ */
+/*
+#define TEST(x, y) x y;
 
 void DisplayServer::process(QWebSocket *socket, ReqPtr &obj) {
     uint8_t magic;
     obj->data >> magic;
 
+    TEST(uint16_t, layer_type)
+
+    layer_type = magic;
+    layer_type ++;
+
     // @TODO impl whitelist
 
+    T_INSTRUCTION(magic) {
+        CASE(CREATE, create(socket, obj))
+        CASE(READ, read(socket, obj))
+        CASE(UPDATE, update(socket, obj))
+        CASE(DELETE, del(socket, obj))
+        CASE(COMMAND, command(socket, obj))
+        default:
+            qCritical() << "Unknown instruction";
+        socket << status(STATUS_INTERNAL_ERROR, obj);
+    }
+
+    /*
     switch (INSTRUCTION(magic)) {
         case CREATE: create(socket, obj);
             break;
@@ -98,9 +163,11 @@ void DisplayServer::process(QWebSocket *socket, ReqPtr &obj) {
             break;
         default:
             qCritical() << "Unknown instruction";
-            socket << status(STATUS_INTERNAL_ERROR, obj);
-    }
+        socket << status(STATUS_INTERNAL_ERROR, obj);
+    }*//*
 }
+
+// std::unordered_map<std::string, >
 
 void DisplayServer::create(QWebSocket *socket, ReqPtr &obj) {
     uint8_t magic;
@@ -230,17 +297,7 @@ void DisplayServer::cmd_meta(QWebSocket *socket, ReqPtr &obj) {
     }
 
     (void) (socket << resp);
-}
-
-ByteObject status(const uint8_t status, ReqPtr &obj) {
-    ByteObject resp;
-
-    // header
-    resp << obj->request_id;
-    resp << status;
-
-    return resp;
-}
+}*/
 
 
 
