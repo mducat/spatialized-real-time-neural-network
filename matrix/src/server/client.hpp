@@ -24,10 +24,10 @@ struct ClientData {
 
 class WSClient {
 public:
-    explicit WSClient(QWebSocket *, std::shared_ptr<ClientData>);
+    explicit WSClient(QWebSocket *, const std::shared_ptr<ClientData> &);
 
     QWebSocket *socket;
-    std::shared_ptr<ClientData> client_data;
+    std::shared_ptr<ClientData> data;
 };
 
 typedef std::shared_ptr<Request> req_t;

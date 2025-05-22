@@ -70,8 +70,12 @@ qt_add_library(mlib
         src/server/blueprint.hpp
         src/server/client.cpp
         src/server/client.hpp
+
+        # UI - NETWORK - CONTROLLERS
+
         src/server/controllers/create.cpp
-        src/server/controllers/controllers.hpp
+        src/server/controllers/command.cpp
+        src/server/controllers/read.cpp
 
         # ENGINE
 
@@ -105,7 +109,6 @@ qt_add_library(mlib
         src/engine/dataset/loaders/mnist_loader.cpp
         src/engine/math/losses.cpp
         src/engine/objects/network/loss.hpp
-        src/server/controllers/command.cpp
 
         # UNSORTED
 

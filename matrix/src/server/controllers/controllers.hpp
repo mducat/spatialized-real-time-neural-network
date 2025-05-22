@@ -7,18 +7,22 @@
 
 #include "server/client.hpp"
 
+#define DECLARE(x) void x(client_t &, req_t &)
+
 namespace ws {
 
     namespace create {
         void project(client_t &, req_t &);
+        void layer(client_t &, req_t &);
     }
 
-    namespace update {
+    /* namespace update {
         void project(client_t &, req_t &);
-    }
+    } */
 
     namespace read {
         void project(client_t &, req_t &);
+        void layer(client_t &, req_t &);
     }
 
     namespace command {
