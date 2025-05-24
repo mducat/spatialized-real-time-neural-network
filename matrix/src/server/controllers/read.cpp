@@ -23,8 +23,10 @@ void ws::read::layer(client_t &client, req_t &req) {
 
     auto resp = status(STATUS_OK, req);
 
+    resp << static_cast<uint32_t>(layers.size());
+
     for (uint16_t i = 0; i < layers.size(); i++) {
-        resp << i << layers[i]->name();
+        resp << static_cast<uint16_t>(layers[i]->getLayerId()) << layers[i]->name();
     }
 
     client->socket << resp;

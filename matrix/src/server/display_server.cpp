@@ -9,9 +9,6 @@
 #include "protocol.hpp"
 
 #include <ByteObject.hpp>
-// #include <random.hpp>
-
-#include <qaccessible_base.h>
 
 #include "blueprint.hpp"
 #include "ByteObject.tcc"
@@ -43,10 +40,14 @@ void DisplayServer::connected() {
     connect(socket, &QWebSocket::binaryMessageReceived, this, &DisplayServer::message);
     connect(socket, &QWebSocket::disconnected, this, &DisplayServer::disconnected);
 
-    qDebug() << "new client connected" << socket->peerAddress().toString();
+    auto const addr = socket->peerAddress().toString();
+
+    qDebug() << "new client connected" << addr;
 
     _clients << socket;
-    _clients_data[socket] = std::make_shared<ClientData>();
+    if (!_clients_data.contains(addr)) {
+        _clients_data[addr] = std::make_shared<ClientData>();
+    }
 }
 
 void DisplayServer::disconnected() {
@@ -54,21 +55,24 @@ void DisplayServer::disconnected() {
 
     qDebug() << "new client disconnected" << socket->peerAddress();
 
+    auto const addr = socket->peerAddress().toString();
+
     _clients.removeOne(socket);
-    _clients_data[socket] = nullptr;
+    // _clients_data[addr] = nullptr;
 }
 
 void DisplayServer::message(QByteArray data) {
     auto socket = qobject_cast<QWebSocket *>(sender());
+    auto const addr = socket->peerAddress().toString();
 
     ByteObject obj(reinterpret_cast<uint8_t const *>(data.constData()), data.size());
-    qDebug() << "new client message" << socket->peerAddress() << obj._size;
+    qDebug() << "new client message" << addr << obj._size;
 
     uint64_t request_id;
     obj >> request_id;
 
     auto request = std::make_shared<Request>(obj, request_id);
-    auto client = std::make_shared<WSClient>(socket, _clients_data[socket]);
+    auto client = std::make_shared<WSClient>(socket, _clients_data[addr]);
 
     try {
         // @TODO safe byteobject (throw on out of range)
@@ -82,6 +86,10 @@ void DisplayServer::message(QByteArray data) {
 
 void DisplayServer::init_blueprint() const {
     this->_bp->declare_registry();
+
+    this->_bp->add_method("ping", [](client_t &c, req_t &req) {
+        c->socket << status(STATUS_OK, req);
+    });
 
     const auto create = this->_bp->add_controller("create");
     create->add_method("project", ws::create::project);
@@ -98,10 +106,6 @@ void DisplayServer::init_blueprint() const {
 
     const auto cmd_meta = command->add_controller("meta");
     cmd_meta->add_method("types", ws::command::meta::types);
-
-    /*cmd_meta->add_method("test", [](client_t &c, req_t &req) {
-        c->socket << status(STATUS_OK, req);
-    });*/
 }
 
 

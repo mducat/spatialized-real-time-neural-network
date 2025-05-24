@@ -40,7 +40,7 @@ private:
 
     std::unique_ptr<Blueprint> _bp;
 
-    std::unordered_map<QWebSocket *, std::shared_ptr<ClientData>> _clients_data;
+    std::unordered_map<QString, std::shared_ptr<ClientData>> _clients_data;
 
     //std::unordered_map<uint16_t, std::shared_ptr<Project>> _projects;
 };
