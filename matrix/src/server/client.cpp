@@ -10,8 +10,8 @@
 #include "ByteObject.tcc"
 
 
-WSClient::WSClient(QWebSocket *_socket, const std::shared_ptr<ClientData> &_data)
-    : socket(_socket), data(_data) {
+WSClient::WSClient(QWebSocket *_socket, const std::shared_ptr<ClientData> &_data, DisplayServer *_server)
+    : socket(_socket), data(_data), parent(_server) {
 }
 
 void operator<<(QWebSocket * const socket, ByteObject const &obj) {

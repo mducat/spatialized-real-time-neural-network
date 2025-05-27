@@ -3,6 +3,8 @@
 //
 
 #include <layer.hpp>
+#include <project.hpp>
+#include <qtimer.h>
 
 #include "controllers.hpp"
 
@@ -13,6 +15,35 @@ void ws::command::status(client_t &client, req_t &req) {
 
     client->socket << resp;
 }
+
+
+
+void ws::command::start(client_t &client, req_t &req) {
+    uint16_t project_id;
+    req->data >> project_id;
+
+    auto project = client->data->projects[project_id];
+    auto thread = client->data->threads[project_id];
+
+    project->init();
+    thread->start(10);
+
+    client->socket << status(STATUS_OK, req);
+}
+
+
+
+void ws::command::stop(client_t &client, req_t &req) {
+    uint16_t project_id;
+    req->data >> project_id;
+
+    auto thread = client->data->threads[project_id];
+    thread->stop();
+
+    client->socket << status(STATUS_OK, req);
+}
+
+
 
 void ws::command::meta::types(client_t &client, req_t &req) {
     auto resp = status(STATUS_OK, req);

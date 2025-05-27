@@ -14,6 +14,8 @@ namespace ws {
     namespace create {
         void project(client_t &, req_t &);
         void layer(client_t &, req_t &);
+
+        void demo(client_t &, req_t &);
     }
 
     /* namespace update {
@@ -23,11 +25,16 @@ namespace ws {
     namespace read {
         void project(client_t &, req_t &);
         void layer(client_t &, req_t &);
+        void graph(client_t &, req_t &);
+        void node(client_t &, req_t &);
+        void end_node(client_t &, req_t &);
     }
 
     namespace command {
 
         void status(client_t &, req_t &);
+        void start(client_t &, req_t &);
+        void stop(client_t &, req_t &);
 
         namespace meta {
 

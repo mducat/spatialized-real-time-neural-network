@@ -47,6 +47,9 @@ void ByteObject::writeToByteObject(void const *thing, size_t size) {
 }
 
 void ByteObject::readFromByteObject(void *thing, size_t size) {
+    if (size + _cursor > _size) {
+        throw std::runtime_error("ByteObject::readFromByteObject: size overflow");
+    }
     uint8_t *ptr = &_data[_cursor];
     memcpy(thing, ptr, size);
     _cursor += size;

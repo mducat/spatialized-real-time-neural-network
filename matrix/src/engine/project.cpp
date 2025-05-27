@@ -1,4 +1,6 @@
 
+#include <ranges>
+
 #include "project.hpp"
 
 #include <qdebug.h>
@@ -6,6 +8,7 @@
 Project::Project() = default;
 
 void Project::init() {
+    qWarning() << "Project::init()";
     _delta.start();
 }
 
@@ -13,8 +16,17 @@ void Project::scaleTime(const double time) {
     _time_scale = time;
 }
 
-void Project::addCallback(const std::function<void()> &func) {
-    this->_callbacks.push_back(func);
+uint32_t Project::addCallback(const std::function<void()> &func) {
+    static uint32_t handle_id = 0;
+    uint32_t id = ++handle_id;
+
+    this->_callbacks[id] = func;
+
+    return id;
+}
+
+void Project::removeCallback(uint32_t handle) {
+    this->_callbacks.erase(this->_callbacks.find(handle));
 }
 
 void Project::step(double const force_delta) {
@@ -28,7 +40,7 @@ void Project::step(double const force_delta) {
         layer->step(delta);
     }
 
-    for (const auto& callback : _callbacks) {
+    for (const auto& callback : std::views::values(_callbacks)) {
         callback();
     }
 }

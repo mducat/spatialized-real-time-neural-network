@@ -5,6 +5,7 @@
 #include <launcher.hpp>
 #include <QApplication>
 #include <../engine/math/voltage_ode.hpp>
+#include <generic/plot.hpp>
 
 #define TO_F(func) [func](double const x) -> double { return func->compute(x); };
 
@@ -12,12 +13,18 @@ int main(int ac, char **av) {
     launcher::init();
     QApplication app(ac, av);
 
-    /*Window *win;
-    win->show();
-
     VoltageODE *test = new ExponentialVoltage(1, 1, 1);
     test->setParams({-0.7, -0.8, 4.9});
     std::function const f = TO_F(test);
+
+    auto const p = new Plot(f);
+    p->show();
+
+    return launcher::exec(p);
+
+    /*Window *win;
+    win->show();
+
     win->plot(f);
 
     VoltageODE *test2 = new QuadraticVoltage(1, 1, 1);

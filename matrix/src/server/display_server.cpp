@@ -34,6 +34,14 @@ void DisplayServer::start(uint16_t port) {
     }
 }
 
+QWebSocket * DisplayServer::findSocket(QString target) {
+    for (const auto socket : _clients) {
+        if (auto const addr = socket->peerAddress().toString(); addr == target)
+            return socket;
+    }
+    return nullptr;
+}
+
 void DisplayServer::connected() {
     QWebSocket *socket = _server->nextPendingConnection();
 
@@ -72,7 +80,7 @@ void DisplayServer::message(QByteArray data) {
     obj >> request_id;
 
     auto request = std::make_shared<Request>(obj, request_id);
-    auto client = std::make_shared<WSClient>(socket, _clients_data[addr]);
+    auto client = std::make_shared<WSClient>(socket, _clients_data[addr], this);
 
     try {
         // @TODO safe byteobject (throw on out of range)
@@ -93,16 +101,22 @@ void DisplayServer::init_blueprint() const {
 
     const auto create = this->_bp->add_controller("create");
     create->add_method("project", ws::create::project);
-    create->add_method("layer", ws::create::layer);
+    create->add_method("layer",   ws::create::layer);
+    create->add_method("demo",    ws::create::demo);
 
     const auto read = this->_bp->add_controller("read");
-    read->add_method("project", ws::read::project);
-    read->add_method("layer", ws::read::layer);
+    read->add_method("project",   ws::read::project);
+    read->add_method("layer",     ws::read::layer);
+    read->add_method("graph",     ws::read::graph);
+    read->add_method("node",      ws::read::node);
+    read->add_method("end_node",  ws::read::end_node);
 
     const auto command = this->_bp->add_controller("command");
     this->_bp->add_alias("cmd", "command");
 
     command->add_method("status", ws::command::status);
+    command->add_method("start",  ws::command::start);
+    command->add_method("stop",   ws::command::stop);
 
     const auto cmd_meta = command->add_controller("meta");
     cmd_meta->add_method("types", ws::command::meta::types);

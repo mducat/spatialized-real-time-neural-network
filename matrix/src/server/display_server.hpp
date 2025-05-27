@@ -22,6 +22,7 @@ public:
     ~DisplayServer() override;
 
     void start(uint16_t port);
+    QWebSocket *findSocket(QString addr);
 
 private Q_SLOTS:
 
