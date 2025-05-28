@@ -53,6 +53,9 @@ void Layer::addCallback(const std::function<void()> &func) {
 }
 
 std::shared_ptr<Object> & Layer::getObjectById(std::size_t object_id) {
+    if (!this->_objects.contains(object_id)) {
+        throw std::logic_error("Can not find Object " + std::to_string(object_id));
+    }
     return this->_objects[object_id];
 }
 

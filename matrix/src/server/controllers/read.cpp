@@ -51,7 +51,7 @@ void ws::read::graph(client_t &client, req_t &req) {
 
     req->data >> project_id >> layer_id;
     auto const project = client->data->projects[project_id];
-    auto const layer = project->getLayers().at(layer_id);
+    auto const layer = project->getLayer(layer_id);
 
     auto resp = status(STATUS_OK, req);
 
@@ -87,8 +87,10 @@ void ws::read::node(client_t &client, req_t &req) {
 
     req->data >> project_id >> layer_id >> node_id;
 
+    qDebug() << DISP(project_id) << DISP(layer_id) << DISP(node_id);
+
     auto const project = client->data->projects[project_id];
-    auto const layer = project->getLayers().at(layer_id);
+    auto const layer = project->getLayer(layer_id);
     auto const node = layer->getObjectById(node_id);
 
     auto network_node = std::static_pointer_cast<NetworkObject>(node);
@@ -97,22 +99,24 @@ void ws::read::node(client_t &client, req_t &req) {
         return network_node->value();
     });
 
-    std::shared_ptr<Request> request = req;
     auto addr = client->socket->peerAddress().toString();
 
-    uint32_t handle = project->addCallback([value_recorder, &client, &req, addr] {
+    uint32_t handle = project->addCallback([value_recorder, client, req, addr] {
         static int counter = 0;
 
         counter++;
+        std::shared_ptr<Request> _req = req;
+        std::shared_ptr<WSClient> _client = client;
 
         // with msec = 10, 100 * 10ms = 1s
-        if (counter % 100 == 0) {
-            auto resp = status(STATUS_OK, req);
+        if (counter % 3)
+            return;
 
-            resp << value_recorder->getValues();
-            if (const auto socket = client->parent->findSocket(addr)) {
-                (void) (socket << resp);
-            }
+        auto resp = status(STATUS_OK, _req);
+
+        resp << value_recorder->getValues();
+        if (const auto socket = _client->parent->findSocket(addr)) {
+            (void) (socket << resp);
         }
     });
 

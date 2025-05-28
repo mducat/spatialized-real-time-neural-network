@@ -2,6 +2,9 @@
 // Created by thornhill on 02/05/25.
 //
 
+#include <cpptrace/cpptrace.hpp>
+
+
 #include <QtWebSockets/qwebsocketserver.h>
 #include <QtWebSockets/qwebsocket.h>
 
@@ -9,6 +12,7 @@
 #include "protocol.hpp"
 
 #include <ByteObject.hpp>
+#include <cpptrace/from_current.hpp>
 
 #include "blueprint.hpp"
 #include "ByteObject.tcc"
@@ -82,12 +86,14 @@ void DisplayServer::message(QByteArray data) {
     auto request = std::make_shared<Request>(obj, request_id);
     auto client = std::make_shared<WSClient>(socket, _clients_data[addr], this);
 
-    try {
-        // @TODO safe byteobject (throw on out of range)
+    CPPTRACE_TRY {
         // @TODO whitelist
+        // @TODO safe generic map (throw undef key)
         this->_bp->process(client, request);
-    } catch (const std::exception &e) {
+    } CPPTRACE_CATCH (const std::exception &e) {
         qCritical() << "Exception: " << e.what();
+        qCritical().noquote() << cpptrace::from_current_exception().to_string(true);
+
         socket << (status(STATUS_INTERNAL_PANIC, request) << e.what());
     }
 }

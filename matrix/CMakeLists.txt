@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(matrix VERSION 1.0.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets WebSockets)
@@ -114,10 +114,21 @@ qt_add_library(mlib
 
 )
 
+
+include(FetchContent)
+FetchContent_Declare(
+        cpptrace
+        GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
+        GIT_TAG        v0.8.3 # <HASH or TAG>
+)
+FetchContent_MakeAvailable(cpptrace)
+
+
 target_link_libraries(mlib PRIVATE
         Qt6::Core
         Qt6::Widgets
         Qt6::WebSockets
+        cpptrace::cpptrace
 )
 
 qt_add_executable(matrix     src/workspace/main.cpp)
@@ -141,5 +152,16 @@ foreach (my_entry IN LISTS _executables_list)
     )
 
 endforeach()
+
+# Needed for shared library builds on windows:  copy cpptrace.dll to the same directory as the
+# executable for your_target
+if(WIN32)
+    add_custom_command(
+            TARGET mlib POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:cpptrace::cpptrace>
+            $<TARGET_FILE_DIR:mlib>
+    )
+endif()
 
 target_compile_definitions(matrix PRIVATE -DQT_DEBUG -DQT_MESSAGELOGCONTEXT)

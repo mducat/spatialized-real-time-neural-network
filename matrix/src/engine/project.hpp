@@ -20,6 +20,8 @@ public:
     uint32_t addCallback(const std::function<void()> &func);
     void removeCallback(uint32_t);
 
+    std::shared_ptr<Layer> getLayer(uint16_t layer_id);
+
     std::shared_ptr<Layer> createLayer(LayerType type);
     std::vector<std::shared_ptr<Layer>> getLayers();
 

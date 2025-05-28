@@ -5,6 +5,7 @@
 
 #include "ByteObject.hh"
 #include <vector>
+#include <deque>
 #include <string.h>
 #include <string>
 #include <ostream>
@@ -89,6 +90,8 @@ public:
 
     template <typename T>
     ByteObject &operator<<(std::vector<T> const &thing);
+    template <typename T>
+    ByteObject &operator<<(std::deque<T> const &thing);
     template <typename... Ts>
     ByteObject &operator<<(std::tuple<Ts...> const &thing);
     template <typename T>

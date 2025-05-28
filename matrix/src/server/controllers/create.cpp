@@ -67,7 +67,7 @@ void ws::create::demo(client_t &client, req_t &req) {
 
     req->data >> project_id >> layer_id;
     auto const project = client->data->projects[project_id];
-    auto const layer = project->getLayers().at(layer_id);
+    auto const layer = project->getLayer(layer_id);
 
     auto resp = status(STATUS_OK, req);
 

@@ -59,6 +59,26 @@ ByteObject &ByteObject::operator<<(std::vector<T> const &thing) {
     return *this;
 }
 
+template <typename T>
+ByteObject &ByteObject::operator<<(std::deque<T> const &thing) {
+#if BYTEOBJECT_DEBUG
+    Depth depthL(&_depth);
+#endif
+    uint32_t size = thing.size();
+#if BYTEOBJECT_DEBUG
+    indent();
+    std::cout << "vector " << demangle(typeid(T).name()) << std::endl;
+#endif
+    *this << size;
+    for (T const &v : thing)
+        *this << v;
+#if BYTEOBJECT_DEBUG
+    indent();
+    std::cout << "vector end" << std::endl;
+#endif
+    return *this;
+}
+
 template <typename... Ts>
 ByteObject &ByteObject::operator<<(std::tuple<Ts...> const &thing) {
     #if BYTEOBJECT_DEBUG

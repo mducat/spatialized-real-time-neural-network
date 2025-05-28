@@ -8,10 +8,11 @@ class Delta {
 public:
 
     void start();
+    void reset();
     [[nodiscard]] double delta();
 
     [[nodiscard]] double uptime() const;
-    // doesn't reset
+    // doesn't step like delta()
     [[nodiscard]] double value() const;
 
 private:

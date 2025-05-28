@@ -29,6 +29,13 @@ void Project::removeCallback(uint32_t handle) {
     this->_callbacks.erase(this->_callbacks.find(handle));
 }
 
+std::shared_ptr<Layer> Project::getLayer(uint16_t layer_id) {
+    if (layer_id < 0 || layer_id >= _layers.size()) {
+        throw std::invalid_argument("Invalid layer id");
+    }
+    return this->_layers[layer_id];
+}
+
 void Project::step(double const force_delta) {
     double delta = std::min(_delta.delta() * _time_scale, _max_allowed_delta);
 
