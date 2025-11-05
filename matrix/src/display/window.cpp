@@ -85,6 +85,10 @@ void Window::tick() const {
     this->_project->step();
 }
 
-void Window::runProject(int msec) {
+void Window::runProject(int msec) const {
     this->_timer->start(msec);
+}
+
+void Window::pauseProject() const {
+    this->_timer->stop();
 }

@@ -27,7 +27,8 @@ public:
     std::shared_ptr<Project> getProject();
 
     void lookupProject() const;
-    void runProject(int);
+    void runProject(int) const;
+    void pauseProject() const;
 
     void status(const std::string &) const;
 

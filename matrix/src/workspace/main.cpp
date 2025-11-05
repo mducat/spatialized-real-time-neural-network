@@ -73,6 +73,8 @@ int main(int ac, char **av) {
 
     auto *win = new Window;
 
+    win->setProject(project);
+
     // Object *test = new InputHolder(5.1);
 
     /*for (auto const &item : objs) {

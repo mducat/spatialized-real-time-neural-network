@@ -28,6 +28,8 @@ void Toolbar::init() {
 
     auto cb = [&] {this->_parent->runProject(50);};
     connect(this->_start, &QAction::triggered, this, cb);
-    // connect(stop, &QAction::triggered, this, &Window::pauseProject);
+
+    auto cbStop = [&] {this->_parent->pauseProject();};
+    connect(this->_stop, &QAction::triggered, this, cbStop);
 }
 

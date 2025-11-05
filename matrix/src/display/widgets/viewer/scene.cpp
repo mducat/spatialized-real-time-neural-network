@@ -160,8 +160,8 @@ void LayerScene::updateView() {
     std::unordered_map<std::size_t, QVector2D> objects_movement;
     // @todo stop timer when nothing to move
 
-    float const mag = 200.0;
-    float temp_ = 1.0;
+    float const mag = 5.0;
+    float temp_ = 0.5;
 
     for (auto &[id, obj] : this->_objects) {
         objects_movement[id] = QVector2D(0, 0);
