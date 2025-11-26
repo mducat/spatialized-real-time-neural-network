@@ -30,11 +30,14 @@ void ws::create::project(client_t &client, req_t &req) {
     client->data->threads[project_id] = timer;
     client->data->values[project_id] = {};
 
+    /*
+     * recorded when reading
     project->addCallback([client, project_id] {
         for (auto value : std::views::values(client->data->values[project_id])) {
             value->recordValue();
         }
     });
+     **/
 
     client->socket << (status(STATUS_OK, req) << project_id);
 }

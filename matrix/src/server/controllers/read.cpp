@@ -104,6 +104,8 @@ void ws::read::node(client_t &client, req_t &req) {
     uint32_t handle = project->addCallback([value_recorder, client, req, addr] {
         static int counter = 0;
 
+        value_recorder->recordValue();
+
         counter++;
         std::shared_ptr<Request> _req = req;
         std::shared_ptr<WSClient> _client = client;
