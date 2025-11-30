@@ -31,7 +31,7 @@ DisplayServer::~DisplayServer() {
 }
 
 void DisplayServer::start(uint16_t port) {
-    if (_server->listen(QHostAddress::LocalHost, port)) {
+    if (_server->listen(QHostAddress::Any, port)) {
         qInfo() << "Server listening";
 
         connect(_server, &QWebSocketServer::newConnection, this, &DisplayServer::connected);
@@ -91,10 +91,12 @@ void DisplayServer::message(QByteArray data) {
         // @TODO safe generic map (throw undef key)
         this->_bp->process(client, request);
     } CPPTRACE_CATCH (const std::exception &e) {
-        qCritical() << "Exception: " << e.what();
+        const auto err_msg = std::string(e.what());
+
+        qCritical() << "Exception: " << err_msg;
         qCritical().noquote() << cpptrace::from_current_exception().to_string(true);
 
-        socket << (status(STATUS_INTERNAL_PANIC, request) << e.what());
+        socket << (status(STATUS_INTERNAL_PANIC, request) << err_msg);
     }
 }
 
